@@ -1,0 +1,55 @@
+{
+  "nav": {
+    "home": "Home",
+    "clients": "Clients",
+    "pages": "Pages & Brands",
+    "works": "Featured Works",
+    "testimonials": "Testimonials",
+    "contact": "Contact",
+    "dashboard": "Dashboard",
+    "login": "Login",
+    "logout": "Logout"
+  },
+  "hero": {
+    "badge": "AI Video Creator & Digital Marketer",
+    "cta_primary": "Explore Works",
+    "cta_contact": "Get in Touch",
+    "stats": {
+      "clients": "Clients & Partners",
+      "projects": "Completed Projects",
+      "experience": "Years Experience"
+    }
+  },
+  "clients": {
+    "title": "Trusted by Visionaries",
+    "subtitle": "Strategic collaborations driving real brand growth",
+    "view_project": "View Project"
+  },
+  "pages": {
+    "title": "Pages & Digital Brands",
+    "subtitle": "Digital platforms and communities we grow and curate content for",
+    "visit": "Visit Platform"
+  },
+  "works": {
+    "title": "Featured Works",
+    "subtitle": "A blend of cinematic AI generation, marketing, and creative production",
+    "all": "All",
+    "view_details": "Details",
+    "watch_video": "Watch Video"
+  },
+  "testimonials": {
+    "title": "Client Testimonials",
+    "subtitle": "Honest reviews reflecting our commitment to creative excellence",
+    "add_review": "Leave a Review"
+  },
+  "footer": {
+    "rights": "All rights reserved",
+    "built_with": "Crafted with passion for an ultra-premium experience"
+  },
+  "common": {
+    "loading": "Loading...",
+    "error": "An unexpected error occurred",
+    "retry": "Retry",
+    "empty": "No items found"
+  }
+}
