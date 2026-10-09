@@ -284,6 +284,8 @@ A link should support:
 - icon
 - visibility
 - sort order
+- owner_type (`profile` | `page`)
+- owner_id
 
 A user may add any platform or URL:
 
@@ -300,6 +302,12 @@ A user may add any platform or URL:
 - custom links
 
 There must always be support for a primary website link.
+
+### Dynamic Links Rules:
+- **Strict Owner Isolation**: Links belong to specific owners (`owner_type = 'profile'` for personal links; `owner_type = 'page'` for sub-brands/pages). The Hero and Footer consume only `owner_type = 'profile'` links.
+- **Zero Static Fallbacks**: Never render hardcoded fallback social links (e.g., hardcoded LinkedIn or Instagram). While querying Supabase, display dark animated skeletons. If no links exist in the database, render nothing.
+- **Direct Contacts**: Dedicated direct contact links (Phone with `tel:` and Email with `mailto:`) in Footer maintain strict `dir="ltr"` text direction.
+
 
 ---
 
@@ -404,9 +412,15 @@ Do not expose unnecessary private storage paths.
 
 ---
 
-# 12. Video UX
+# 12. Video UX & Media Lazy Loading
 
-Videos should not all load immediately.
+Media elements (images and videos) must not load all at once on initial page load.
+
+Works cards video behavior:
+- Works cards must not mount `<video>` or trigger network buffering upfront.
+- Use `IntersectionObserver` with an advance margin (`rootMargin: '300px'`). Only mount the `<video>` element when approaching the viewport or upon hover.
+- Keep card media lightweight with lazy thumbnail posters until in view.
+- Images across all public sections (Clients logos, Pages avatars) must use native `loading="lazy"`.
 
 Desktop behavior:
 
@@ -432,38 +446,44 @@ video leaves viewport
 pause
 ```
 
-Use IntersectionObserver.
-
 Videos should use:
 
 - muted
 - playsInline
 - appropriate preload strategy
 - thumbnail/poster
-- lazy loading where possible
+- lazy loading via IntersectionObserver
 
 Never autoplay with sound.
 
 ---
 
-# 13. Fullscreen Work Viewer
+# 13. Fullscreen Work Viewer & Cinematic Video Player
 
-Each work can be opened in a fullscreen/lightbox viewer.
+Each work can be opened in a fullscreen/lightbox viewer (`WorkModal`).
 
-Requirements:
-
-- image/video support
-- smooth open/close animation
-- close button
-- Escape key
-- body scroll locking
-- keyboard accessibility
+### Custom Cinematic Player Requirements:
+Never use the default browser video controls for works. The player must be a bespoke cinematic dark player:
+- **Design & Mood**: Seamless `#050505` background, `#8B5CF6` glow and accents, ambient backdrop glow.
+- **Controls & Interaction**:
+  - Auto-hiding control bar on mouse inactivity (2.5 seconds timeout).
+  - Center glassmorphism play/pause toggle with smooth fade animations.
+  - Custom scrubbable progress bar with real buffer indicator and hover thumb.
+  - Precise timestamp counter (`mm:ss / mm:ss`).
+  - Interactive volume slider with quick mute toggle.
+  - Skip forward/backward ±10 seconds.
+  - Playback speed switcher (`1x`, `1.25x`, `1.5x`, `2x`).
+  - Native fullscreen toggle button.
+  - Full keyboard shortcuts: Space (play/pause), Left/Right Arrows (seek ±5s), Up/Down Arrows (volume ±10%), M (mute), F (fullscreen), Escape (close modal).
+- Body scroll locking when open.
+- Keyboard accessible and smooth open/close animations.
 
 Also provide a dedicated Work Details page:
 
 ```text
 /work/:id
 ```
+
 
 ---
 
@@ -510,9 +530,12 @@ Logout
 
 Dashboard should feel like part of the same premium product, but remain highly usable.
 
+### Dashboard Skeletons:
+All dashboard manager pages (Overview, Profile, Clients, Pages, Works, Categories, Testimonials, Links) must render dedicated dark skeleton loaders while Supabase queries are in flight. Never render blank pages, abrupt layout shifts, or raw placeholder content while data is loading.
+
 ---
 
-# 16. Authentication
+# 16. Authentication & Account Security
 
 Use Supabase Auth.
 
@@ -527,6 +550,10 @@ Protected dashboard routes must redirect unauthenticated users to login.
 Do not rely only on frontend route guards.
 
 Supabase RLS is mandatory.
+
+### Account Security:
+The Admin must be able to update their account password directly and securely from the Dashboard Settings (`SettingsManagerPage`) via `supabase.auth.updateUser`.
+
 
 ---
 
@@ -642,6 +669,11 @@ Every async operation must have:
 Use skeletons where appropriate.
 
 Never leave a blank screen during loading.
+
+### Loading Guidelines:
+- Both public sections and dashboard pages must use custom dark skeleton placeholders matching exact content dimensions.
+- Never show hardcoded fallback content or dummy links while data is loading. If data is absent, render empty rather than mock data.
+
 
 ---
 

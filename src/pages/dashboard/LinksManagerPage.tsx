@@ -161,72 +161,92 @@ export const LinksManagerPage: React.FC = () => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {links.map((link) => (
-          <Card key={link.id} className="bg-[#0B0B0B] border-[#242424] p-4 flex flex-col justify-between">
-            <div className="flex items-start justify-between">
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <Card key={i} className="bg-[#0B0B0B] border-[#242424] p-4 flex flex-col justify-between space-y-3 animate-pulse">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-[#151515] border border-[#242424] flex items-center justify-center text-[#8B5CF6]">
-                  {renderPlatformIcon(link.icon || link.platform || link.label_en)}
+                <div className="w-9 h-9 rounded-xl bg-[#181818]" />
+                <div className="space-y-1.5 flex-1">
+                  <div className="h-4 bg-[#1F1F1F] rounded w-20" />
+                  <div className="h-3 bg-[#181818] rounded w-28" />
                 </div>
-                <div>
-                  <h4 className="font-bold text-sm text-[#F5F5F5]">
-                    {isAr ? link.label_ar || link.platform : link.label_en || link.platform}
-                  </h4>
-                  <a
-                    href={link.url}
-                    target="_blank"
-                    rel="noreferrer"
-                    className="text-[11px] text-[#38BDF8] hover:underline flex items-center gap-1 mt-0.5"
+              </div>
+              <div className="pt-2 border-t border-[#1C1C1C] flex items-center gap-2">
+                <div className="w-12 h-5 rounded-full bg-[#181818]" />
+                <div className="w-12 h-5 rounded-full bg-[#181818]" />
+              </div>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {links.map((link) => (
+            <Card key={link.id} className="bg-[#0B0B0B] border-[#242424] p-4 flex flex-col justify-between">
+              <div className="flex items-start justify-between">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-[#151515] border border-[#242424] flex items-center justify-center text-[#8B5CF6]">
+                    {renderPlatformIcon(link.icon || link.platform || link.label_en)}
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-sm text-[#F5F5F5]">
+                      {isAr ? link.label_ar || link.platform : link.label_en || link.platform}
+                    </h4>
+                    <a
+                      href={link.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-[11px] text-[#38BDF8] hover:underline flex items-center gap-1 mt-0.5"
+                    >
+                      <span className="truncate max-w-[140px]">{link.url}</span>
+                      <ExternalLink className="w-2.5 h-2.5 shrink-0" />
+                    </a>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-1">
+                  <button
+                    onClick={() => {
+                      setEditingLink(link)
+                      setShowModal(true)
+                    }}
+                    className="p-1.5 rounded-lg text-[#9B9B9B] hover:text-white hover:bg-[#1A1A1A]"
                   >
-                    <span className="truncate max-w-[140px]">{link.url}</span>
-                    <ExternalLink className="w-2.5 h-2.5 shrink-0" />
-                  </a>
+                    <Edit2 className="w-3.5 h-3.5" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(link.id)}
+                    className="p-1.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
                 </div>
               </div>
 
-              <div className="flex items-center gap-1">
-                <button
-                  onClick={() => {
-                    setEditingLink(link)
-                    setShowModal(true)
-                  }}
-                  className="p-1.5 rounded-lg text-[#9B9B9B] hover:text-white hover:bg-[#1A1A1A]"
-                >
-                  <Edit2 className="w-3.5 h-3.5" />
-                </button>
-                <button
-                  onClick={() => handleDelete(link.id)}
-                  className="p-1.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
-              </div>
-            </div>
-
-            {/* Badges for placements */}
-            <div className="flex items-center gap-1.5 mt-3 pt-2.5 border-t border-[#1C1C1C]">
-              <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${link.show_in_hero !== false ? 'bg-[#8B5CF6]/20 text-[#A78BFA] border border-[#8B5CF6]/30' : 'bg-[#181818] text-[#666]'}`}>
-                {isAr ? 'الهيرو' : 'Hero'}
-              </span>
-              <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${link.show_in_footer !== false ? 'bg-[#38BDF8]/20 text-[#38BDF8] border border-[#38BDF8]/30' : 'bg-[#181818] text-[#666]'}`}>
-                {isAr ? 'الفوتر' : 'Footer'}
-              </span>
-              {!link.is_visible && (
-                <span className="text-[10px] px-2 py-0.5 rounded-full font-medium bg-red-500/10 text-red-400 border border-red-500/20">
-                  {isAr ? 'مخفي' : 'Hidden'}
+              {/* Badges for placements */}
+              <div className="flex items-center gap-1.5 mt-3 pt-2.5 border-t border-[#1C1C1C]">
+                <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${link.show_in_hero !== false ? 'bg-[#8B5CF6]/20 text-[#A78BFA] border border-[#8B5CF6]/30' : 'bg-[#181818] text-[#666]'}`}>
+                  {isAr ? 'الهيرو' : 'Hero'}
                 </span>
-              )}
-            </div>
-          </Card>
-        ))}
+                <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${link.show_in_footer !== false ? 'bg-[#38BDF8]/20 text-[#38BDF8] border border-[#38BDF8]/30' : 'bg-[#181818] text-[#666]'}`}>
+                  {isAr ? 'الفوتر' : 'Footer'}
+                </span>
+                {!link.is_visible && (
+                  <span className="text-[10px] px-2 py-0.5 rounded-full font-medium bg-red-500/10 text-red-400 border border-red-500/20">
+                    {isAr ? 'مخفي' : 'Hidden'}
+                  </span>
+                )}
+              </div>
+            </Card>
+          ))}
 
-        {!loading && links.length === 0 && (
-          <div className="col-span-full p-8 text-center text-xs text-[#777] border border-dashed border-[#242424] rounded-xl">
-            {isAr ? 'لا توجد روابط مضافة بعد.' : 'No links found.'}
-          </div>
-        )}
-      </div>
+          {!loading && links.length === 0 && (
+            <div className="col-span-full p-8 text-center text-xs text-[#777] border border-dashed border-[#242424] rounded-xl">
+              {isAr ? 'لا توجد روابط مضافة بعد.' : 'No links found.'}
+            </div>
+          )}
+        </div>
+      )}
 
       {showModal && editingLink && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">

@@ -99,7 +99,7 @@ export const PagesSection: React.FC = () => {
                     <div className="w-28 h-28 rounded-3xl overflow-hidden mb-6 p-[2px] bg-gradient-to-br from-amber-400 to-[#8B5CF6] shadow-xl">
                       <div className="w-full h-full bg-[#121212] rounded-[22px] flex items-center justify-center overflow-hidden">
                         {p.image_url ? (
-                          <img src={p.image_url} alt={p.name_ar} className="w-full h-full object-cover" />
+                          <img src={p.image_url} alt={p.name_ar} loading="lazy" className="w-full h-full object-cover" />
                         ) : (
                           <div className="w-full h-full bg-gradient-to-br from-[#1A1A1A] to-[#0D0D0D] flex items-center justify-center font-black text-2xl text-amber-400">
                             AI

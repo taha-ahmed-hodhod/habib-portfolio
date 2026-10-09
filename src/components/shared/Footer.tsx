@@ -3,12 +3,11 @@ import { useTranslation } from 'react-i18next'
 import { Phone, Mail } from 'lucide-react'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { renderPlatformIcon } from '@/components/shared/EntityLinksEditor'
-import { LinkedinIcon, InstagramIcon, FacebookIcon } from '@/components/ui/Icons'
 
 export const Footer: React.FC = () => {
   const { t, i18n } = useTranslation()
   const isAr = i18n.language.startsWith('ar')
-  const { footerLinks } = useSocialLinks()
+  const { footerLinks, loading: linksLoading } = useSocialLinks()
 
   return (
     <footer className="border-t border-[#242424]/60 bg-[#050505]/75 backdrop-blur-sm text-[#9B9B9B] py-14">
@@ -29,9 +28,18 @@ export const Footer: React.FC = () => {
           {/* Social Icons & Contact Info */}
           <div className="flex flex-col items-center md:items-end gap-3">
             {/* Dynamic Social Icons */}
-            <div className="flex items-center gap-3 flex-wrap justify-center md:justify-end">
-              {footerLinks.length > 0 ? (
-                footerLinks.map((link) => (
+            {linksLoading ? (
+              <div className="flex items-center gap-3 flex-wrap justify-center md:justify-end">
+                {[1, 2, 3].map((i) => (
+                  <div
+                    key={i}
+                    className="w-10 h-10 rounded-xl bg-[#0F0F0F] border border-[#242424] animate-pulse"
+                  />
+                ))}
+              </div>
+            ) : footerLinks.length > 0 ? (
+              <div className="flex items-center gap-3 flex-wrap justify-center md:justify-end">
+                {footerLinks.map((link) => (
                   <a
                     key={link.id}
                     href={link.url}
@@ -43,39 +51,9 @@ export const Footer: React.FC = () => {
                   >
                     {renderPlatformIcon(link.icon || link.platform)}
                   </a>
-                ))
-              ) : (
-                <>
-                  <a
-                    href="https://linkedin.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="LinkedIn"
-                    className="w-10 h-10 rounded-xl bg-[#0F0F0F] border border-[#242424] flex items-center justify-center text-[#9B9B9B] hover:text-[#0A66C2] hover:border-[#0A66C2]/40 hover:bg-[#0A66C2]/10 transition-all duration-300"
-                  >
-                    <LinkedinIcon className="w-4 h-4" />
-                  </a>
-                  <a
-                    href="https://instagram.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Instagram"
-                    className="w-10 h-10 rounded-xl bg-[#0F0F0F] border border-[#242424] flex items-center justify-center text-[#9B9B9B] hover:text-[#E4405F] hover:border-[#E4405F]/40 hover:bg-[#E4405F]/10 transition-all duration-300"
-                  >
-                    <InstagramIcon className="w-4 h-4" />
-                  </a>
-                  <a
-                    href="https://facebook.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    aria-label="Facebook"
-                    className="w-10 h-10 rounded-xl bg-[#0F0F0F] border border-[#242424] flex items-center justify-center text-[#9B9B9B] hover:text-[#1877F2] hover:border-[#1877F2]/40 hover:bg-[#1877F2]/10 transition-all duration-300"
-                  >
-                    <FacebookIcon className="w-4 h-4" />
-                  </a>
-                </>
-              )}
-            </div>
+                ))}
+              </div>
+            ) : null}
 
             {/* Direct Contact Links */}
             <div className="flex flex-col items-center md:items-end gap-2 pt-1 text-xs">

@@ -159,68 +159,86 @@ export const PagesManagerPage: React.FC = () => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {pages.map((p) => (
-          <Card key={p.id} className="bg-[#0B0B0B] border-[#242424] p-5 flex flex-col justify-between">
-            <div>
-              <div className="flex items-start justify-between mb-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#38BDF8]/20 to-[#8B5CF6]/20 border border-[#8B5CF6]/30 flex items-center justify-center text-[#8B5CF6]">
-                  <Layers className="w-5 h-5" />
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[1, 2, 3].map((i) => (
+            <Card key={i} className="bg-[#0B0B0B] border-[#242424] p-5 space-y-4 animate-pulse">
+              <div className="flex items-center justify-between">
+                <div className="w-10 h-10 rounded-xl bg-[#181818]" />
+                <div className="w-14 h-5 rounded-full bg-[#181818]" />
+              </div>
+              <div className="space-y-2">
+                <div className="h-4 bg-[#1F1F1F] rounded w-2/3" />
+                <div className="h-3 bg-[#181818] rounded w-1/3" />
+              </div>
+              <div className="h-3 bg-[#181818] rounded w-full" />
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {pages.map((p) => (
+            <Card key={p.id} className="bg-[#0B0B0B] border-[#242424] p-5 flex flex-col justify-between">
+              <div>
+                <div className="flex items-start justify-between mb-3">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#38BDF8]/20 to-[#8B5CF6]/20 border border-[#8B5CF6]/30 flex items-center justify-center text-[#8B5CF6]">
+                    <Layers className="w-5 h-5" />
+                  </div>
+                  <Badge variant={p.is_visible ? 'accent' : 'default'}>
+                    {p.is_visible ? (isAr ? 'ظاهر' : 'Visible') : (isAr ? 'مخفي' : 'Hidden')}
+                  </Badge>
                 </div>
-                <Badge variant={p.is_visible ? 'accent' : 'default'}>
-                  {p.is_visible ? (isAr ? 'ظاهر' : 'Visible') : (isAr ? 'مخفي' : 'Hidden')}
-                </Badge>
+
+                <h4 className="font-bold text-[#F5F5F5] text-base">
+                  {isAr ? p.name_ar : p.name_en}
+                </h4>
+                <p className="text-xs text-[#8B5CF6] font-medium mt-0.5">
+                  {isAr ? p.specialization_ar : p.specialization_en}
+                </p>
+                <p className="text-xs text-[#9B9B9B] mt-2 line-clamp-3 whitespace-pre-line">
+                  {isAr ? p.description_ar : p.description_en}
+                </p>
               </div>
 
-              <h4 className="font-bold text-[#F5F5F5] text-base">
-                {isAr ? p.name_ar : p.name_en}
-              </h4>
-              <p className="text-xs text-[#8B5CF6] font-medium mt-0.5">
-                {isAr ? p.specialization_ar : p.specialization_en}
-              </p>
-              <p className="text-xs text-[#9B9B9B] mt-2 line-clamp-3 whitespace-pre-line">
-                {isAr ? p.description_ar : p.description_en}
-              </p>
-            </div>
-
-            <div className="flex items-center justify-between mt-5 pt-3 border-t border-[#1C1C1C]">
-              {p.primary_url ? (
-                <a
-                  href={p.primary_url}
-                  target="_blank"
-                  rel="noreferrer"
-                  className="text-xs text-[#38BDF8] hover:underline flex items-center gap-1"
-                >
-                  <ExternalLink className="w-3 h-3" />
-                  <span>{isAr ? 'زيارة' : 'Visit'}</span>
-                </a>
-              ) : (
-                <span />
-              )}
-              <div className="flex items-center gap-2">
-                <button
-                  onClick={() => openModal(p)}
-                  className="p-1.5 rounded-lg text-[#9B9B9B] hover:text-white hover:bg-[#1A1A1A]"
-                >
-                  <Edit2 className="w-4 h-4" />
-                </button>
-                <button
-                  onClick={() => handleDelete(p)}
-                  className="p-1.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10"
-                >
-                  <Trash2 className="w-4 h-4" />
-                </button>
+              <div className="flex items-center justify-between mt-5 pt-3 border-t border-[#1C1C1C]">
+                {p.primary_url ? (
+                  <a
+                    href={p.primary_url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-xs text-[#38BDF8] hover:underline flex items-center gap-1"
+                  >
+                    <ExternalLink className="w-3 h-3" />
+                    <span>{isAr ? 'زيارة' : 'Visit'}</span>
+                  </a>
+                ) : (
+                  <span />
+                )}
+                <div className="flex items-center gap-2">
+                  <button
+                    onClick={() => openModal(p)}
+                    className="p-1.5 rounded-lg text-[#9B9B9B] hover:text-white hover:bg-[#1A1A1A]"
+                  >
+                    <Edit2 className="w-4 h-4" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(p)}
+                    className="p-1.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </button>
+                </div>
               </div>
-            </div>
-          </Card>
-        ))}
+            </Card>
+          ))}
 
-        {!loading && pages.length === 0 && (
-          <div className="col-span-full p-12 text-center text-sm text-[#777] border border-dashed border-[#242424] rounded-2xl">
-            {isAr ? 'لا توجد صفحات مضافة بعد.' : 'No pages added yet.'}
-          </div>
-        )}
-      </div>
+          {!loading && pages.length === 0 && (
+            <div className="col-span-full p-12 text-center text-sm text-[#777] border border-dashed border-[#242424] rounded-2xl">
+              {isAr ? 'لا توجد صفحات مضافة بعد.' : 'No pages added yet.'}
+            </div>
+          )}
+        </div>
+      )}
 
       {showModal && editingPage && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">

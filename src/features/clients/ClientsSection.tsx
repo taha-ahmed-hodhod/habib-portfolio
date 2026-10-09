@@ -75,7 +75,7 @@ export const ClientsSection: React.FC = () => {
                   <div className="flex items-center gap-3.5 mb-4">
                     <div className="w-12 h-12 rounded-xl bg-[#141414] border border-[#262626] flex items-center justify-center text-[#8B5CF6] group-hover:scale-105 transition-transform overflow-hidden flex-shrink-0">
                       {c.logo_url ? (
-                        <img src={c.logo_url} alt={isAr ? c.name_ar : c.name_en} className="w-full h-full object-cover" />
+                        <img src={c.logo_url} alt={isAr ? c.name_ar : c.name_en} loading="lazy" className="w-full h-full object-cover" />
                       ) : (
                         <Building2 className="w-6 h-6" />
                       )}

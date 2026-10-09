@@ -91,47 +91,64 @@ export const CategoriesManagerPage: React.FC = () => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-        {categories.map((c) => (
-          <Card key={c.id} className="bg-[#0B0B0B] border-[#242424] p-5 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="w-9 h-9 rounded-xl bg-[#151515] border border-[#242424] flex items-center justify-center text-[#8B5CF6]">
-                <FolderTree className="w-4 h-4" />
+      {loading ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <Card key={i} className="bg-[#0B0B0B] border-[#242424] p-5 flex items-center justify-between animate-pulse">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-[#181818]" />
+                <div className="space-y-1.5">
+                  <div className="h-4 bg-[#1F1F1F] rounded w-24" />
+                  <div className="h-2.5 bg-[#181818] rounded w-16" />
+                </div>
               </div>
-              <div>
-                <h4 className="font-bold text-sm text-[#F5F5F5]">
-                  {isAr ? c.name_ar : c.name_en}
-                </h4>
-                <span className="text-[10px] text-[#777] block font-mono">{c.slug}</span>
+              <div className="w-12 h-6 rounded-lg bg-[#181818]" />
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+          {categories.map((c) => (
+            <Card key={c.id} className="bg-[#0B0B0B] border-[#242424] p-5 flex items-center justify-between">
+              <div className="flex items-center gap-3">
+                <div className="w-9 h-9 rounded-xl bg-[#151515] border border-[#242424] flex items-center justify-center text-[#8B5CF6]">
+                  <FolderTree className="w-4 h-4" />
+                </div>
+                <div>
+                  <h4 className="font-bold text-sm text-[#F5F5F5]">
+                    {isAr ? c.name_ar : c.name_en}
+                  </h4>
+                  <span className="text-[10px] text-[#777] block font-mono">{c.slug}</span>
+                </div>
               </div>
-            </div>
 
-            <div className="flex items-center gap-1.5">
-              <button
-                onClick={() => {
-                  setEditingCat(c)
-                  setShowModal(true)
-                }}
-                className="p-1.5 rounded-lg text-[#9B9B9B] hover:text-white hover:bg-[#1A1A1A]"
-              >
-                <Edit2 className="w-3.5 h-3.5" />
-              </button>
-              <button
-                onClick={() => handleDelete(c.id)}
-                className="p-1.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10"
-              >
-                <Trash2 className="w-3.5 h-3.5" />
-              </button>
-            </div>
-          </Card>
-        ))}
+              <div className="flex items-center gap-1.5">
+                <button
+                  onClick={() => {
+                    setEditingCat(c)
+                    setShowModal(true)
+                  }}
+                  className="p-1.5 rounded-lg text-[#9B9B9B] hover:text-white hover:bg-[#1A1A1A]"
+                >
+                  <Edit2 className="w-3.5 h-3.5" />
+                </button>
+                <button
+                  onClick={() => handleDelete(c.id)}
+                  className="p-1.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10"
+                >
+                  <Trash2 className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            </Card>
+          ))}
 
-        {!loading && categories.length === 0 && (
-          <div className="col-span-full p-8 text-center text-xs text-[#777] border border-dashed border-[#242424] rounded-xl">
-            {isAr ? 'لا توجد تصنيفات مضافة بعد.' : 'No categories found.'}
-          </div>
-        )}
-      </div>
+          {!loading && categories.length === 0 && (
+            <div className="col-span-full p-8 text-center text-xs text-[#777] border border-dashed border-[#242424] rounded-xl">
+              {isAr ? 'لا توجد تصنيفات مضافة بعد.' : 'No categories found.'}
+            </div>
+          )}
+        </div>
+      )}
 
       {showModal && editingCat && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">

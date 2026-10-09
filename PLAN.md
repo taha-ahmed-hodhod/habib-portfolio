@@ -1299,3 +1299,28 @@ Normal content management must happen entirely through the Dashboard.
 - **CTA Visibility:** The "شاركنا رأيك" button visibility is strictly driven by `testimonials_cta_visible` from `site_settings`.
 - **Display Limit:** Respects `testimonials_limit` configured in the dashboard (with sensible fallbacks).
 
+### 4. Zero Static Fallbacks & Strict Link Isolation
+- **Rule:** Never render static fallback social links (e.g., hardcoded LinkedIn or Instagram).
+- **Public Hero & Footer:** Fetch from `social_links` with `owner_type = 'profile'` and `is_visible = true`. While loading, display dark animated skeletons. If no links exist in DB, render empty.
+- **Direct Contacts:** Direct phone (`+20 10 07430812`) and email (`habib650@gmail.com`) contact links in Footer retain strict `dir="ltr"` formatting.
+
+### 5. Media Performance & Lazy Viewport Loading
+- **Works Video Optimization:** Works cards do not mount `<video>` or start buffering media upfront. Cards utilize an `IntersectionObserver` with `rootMargin: '300px'`; only when near the viewport or hovered is the `<video>` element rendered and preloaded. Otherwise, only an optimized lazy thumbnail is loaded.
+- **Images:** All client logos and brand images use native `loading="lazy"`.
+
+### 6. Cinematic Custom Video Player (`WorkModal.tsx`)
+- **Aesthetic:** Custom cinematic player matching brand tokens (`#050505` background, `#8B5CF6` accent, ambient glow backdrop).
+- **Controls:**
+  - Auto-hiding control bar on idle (2.5s mouse inactivity).
+  - Scrubbable progress bar with buffer indicator and playhead thumb.
+  - Digital timer `mm:ss / mm:ss`.
+  - Volume slider and mute toggle.
+  - Skip ±10s buttons.
+  - Playback rate selector (`1x` to `2x`).
+  - Fullscreen toggle.
+  - Full keyboard accessibility (Space, Arrows, M, F, Escape).
+
+### 7. Dashboard CMS Loading Skeletons & Account Security
+- **Loading Skeletons:** All 8 dashboard manager pages (`Works`, `Clients`, `Pages`, `Categories`, `Testimonials`, `Links`, `Profile`, `Overview`) provide animated dark skeleton grids during Supabase async queries to prevent layout shifting and flash of placeholder data.
+- **Account Security:** Admin password update flow directly in `SettingsManagerPage` via `supabase.auth.updateUser`.
+

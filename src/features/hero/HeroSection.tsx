@@ -4,7 +4,6 @@ import { ArrowUpRight } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import type { Profile } from '@/types/database'
 import { Button } from '@/components/ui/Button'
-import { LinkedinIcon, InstagramIcon, FacebookIcon } from '@/components/ui/Icons'
 import { dataSync } from '@/services/dataSync'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { renderPlatformIcon } from '@/components/shared/EntityLinksEditor'
@@ -13,7 +12,7 @@ import { Skeleton } from '@/components/ui/Skeleton'
 export const HeroSection: React.FC = () => {
   const { t, i18n } = useTranslation()
   const isAr = i18n.language.startsWith('ar')
-  const { heroLinks } = useSocialLinks()
+  const { heroLinks, loading: linksLoading } = useSocialLinks()
 
   const [profile, setProfile] = useState<Profile>({
     id: 'default',
@@ -141,9 +140,18 @@ export const HeroSection: React.FC = () => {
         </p>
 
         {/* Dynamic Social Links Bar (Powered by useSocialLinks) */}
-        <div className="flex items-center justify-center gap-3 mb-10 flex-wrap">
-          {heroLinks.length > 0 ? (
-            heroLinks.map((link) => (
+        {linksLoading ? (
+          <div className="flex items-center justify-center gap-3 mb-10 flex-wrap">
+            {[1, 2, 3, 4].map((i) => (
+              <div
+                key={i}
+                className="w-11 h-11 rounded-2xl bg-[#0F0F0F] border border-[#242424] animate-pulse"
+              />
+            ))}
+          </div>
+        ) : heroLinks.length > 0 ? (
+          <div className="flex items-center justify-center gap-3 mb-10 flex-wrap">
+            {heroLinks.map((link) => (
               <a
                 key={link.id}
                 href={link.url}
@@ -155,39 +163,9 @@ export const HeroSection: React.FC = () => {
               >
                 {renderPlatformIcon(link.icon || link.platform)}
               </a>
-            ))
-          ) : (
-            <>
-              <a
-                href="https://linkedin.com"
-                target="_blank"
-                rel="noreferrer"
-                className="w-11 h-11 rounded-2xl bg-[#0F0F0F] border border-[#242424] hover:border-[#0A66C2]/60 hover:bg-[#0A66C2]/15 flex items-center justify-center text-[#9B9B9B] hover:text-[#0A66C2] transition-all duration-300 shadow-lg shadow-black/40"
-                aria-label="LinkedIn"
-              >
-                <LinkedinIcon className="w-4 h-4" />
-              </a>
-              <a
-                href="https://instagram.com"
-                target="_blank"
-                rel="noreferrer"
-                className="w-11 h-11 rounded-2xl bg-[#0F0F0F] border border-[#242424] hover:border-[#E4405F]/60 hover:bg-[#E4405F]/15 flex items-center justify-center text-[#9B9B9B] hover:text-[#E4405F] transition-all duration-300 shadow-lg shadow-black/40"
-                aria-label="Instagram"
-              >
-                <InstagramIcon className="w-4 h-4" />
-              </a>
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noreferrer"
-                className="w-11 h-11 rounded-2xl bg-[#0F0F0F] border border-[#242424] hover:border-[#1877F2]/60 hover:bg-[#1877F2]/15 flex items-center justify-center text-[#9B9B9B] hover:text-[#1877F2] transition-all duration-300 shadow-lg shadow-black/40"
-                aria-label="Facebook"
-              >
-                <FacebookIcon className="w-4 h-4" />
-              </a>
-            </>
-          )}
-        </div>
+            ))}
+          </div>
+        ) : null}
 
         {/* Live Animated Statistics Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 w-full max-w-xl mb-10">

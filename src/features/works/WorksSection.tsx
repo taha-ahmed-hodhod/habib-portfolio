@@ -144,10 +144,30 @@ const WorkCardItem: React.FC<WorkCardProps> = ({ work, isAr, onClick }) => {
   const videoRef = useRef<HTMLVideoElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const [isPlaying, setIsPlaying] = useState(false)
+  const [isNearView, setIsNearView] = useState(false)
+
+  // Lazy loading observer for media
+  useEffect(() => {
+    if (!containerRef.current) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            setIsNearView(true)
+            observer.disconnect()
+          }
+        })
+      },
+      { rootMargin: '300px' }
+    )
+
+    observer.observe(containerRef.current)
+    return () => observer.disconnect()
+  }, [])
 
   // Mobile viewport auto-playback using IntersectionObserver
   useEffect(() => {
-    if (work.media_type !== 'video' || !containerRef.current) return
+    if (work.media_type !== 'video' || !containerRef.current || !isNearView) return
 
     const isMobile = window.matchMedia('(max-width: 768px)').matches || ('ontouchstart' in window)
     if (!isMobile) return
@@ -172,10 +192,11 @@ const WorkCardItem: React.FC<WorkCardProps> = ({ work, isAr, onClick }) => {
 
     observer.observe(containerRef.current)
     return () => observer.disconnect()
-  }, [work.media_type, work.media_url])
+  }, [work.media_type, work.media_url, isNearView])
 
   // Desktop hover playback
   const handleMouseEnter = () => {
+    setIsNearView(true)
     if (work.media_type === 'video' && videoRef.current) {
       videoRef.current
         .play()
@@ -202,18 +223,27 @@ const WorkCardItem: React.FC<WorkCardProps> = ({ work, isAr, onClick }) => {
       <div className="relative aspect-video bg-[#121212] overflow-hidden">
         {work.media_type === 'video' ? (
           <>
-            <video
-              ref={videoRef}
-              src={work.media_url}
-              poster={work.thumbnail_url || undefined}
-              muted
-              playsInline
-              loop
-              preload="metadata"
-              onPlay={() => setIsPlaying(true)}
-              onPause={() => setIsPlaying(false)}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
+            {isNearView ? (
+              <video
+                ref={videoRef}
+                src={work.media_url}
+                poster={work.thumbnail_url || undefined}
+                muted
+                playsInline
+                loop
+                preload="metadata"
+                onPlay={() => setIsPlaying(true)}
+                onPause={() => setIsPlaying(false)}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            ) : (
+              <img
+                src={work.thumbnail_url || undefined}
+                alt={work.title_ar}
+                loading="lazy"
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+            )}
             {!isPlaying && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/20 transition-colors pointer-events-none">
                 <div className="w-12 h-12 rounded-full bg-white/90 text-black flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">

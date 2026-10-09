@@ -140,60 +140,78 @@ export const ClientsManagerPage: React.FC = () => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {clients.map((client) => (
-          <Card key={client.id} className="bg-[#0B0B0B] border-[#242424] p-5 flex flex-col justify-between">
-            <div>
-              <div className="flex items-start justify-between mb-3">
-                <div className="w-12 h-12 rounded-xl bg-[#151515] border border-[#242424] flex items-center justify-center overflow-hidden text-[#8B5CF6]">
-                  {client.logo_url ? (
-                    <img src={client.logo_url} alt={client.name_ar} className="w-full h-full object-contain p-1" />
-                  ) : (
-                    <Building2 className="w-6 h-6" />
-                  )}
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <Card key={i} className="bg-[#0B0B0B] border-[#242424] p-5 space-y-4 animate-pulse">
+              <div className="flex items-center justify-between">
+                <div className="w-12 h-12 rounded-xl bg-[#181818]" />
+                <div className="w-14 h-5 rounded-full bg-[#181818]" />
+              </div>
+              <div className="space-y-2">
+                <div className="h-4 bg-[#1F1F1F] rounded w-2/3" />
+                <div className="h-3 bg-[#181818] rounded w-1/3" />
+              </div>
+              <div className="h-3 bg-[#181818] rounded w-full" />
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          {clients.map((client) => (
+            <Card key={client.id} className="bg-[#0B0B0B] border-[#242424] p-5 flex flex-col justify-between">
+              <div>
+                <div className="flex items-start justify-between mb-3">
+                  <div className="w-12 h-12 rounded-xl bg-[#151515] border border-[#242424] flex items-center justify-center overflow-hidden text-[#8B5CF6]">
+                    {client.logo_url ? (
+                      <img src={client.logo_url} alt={client.name_ar} className="w-full h-full object-contain p-1" />
+                    ) : (
+                      <Building2 className="w-6 h-6" />
+                    )}
+                  </div>
+                  <Badge variant={client.is_visible ? 'accent' : 'default'}>
+                    {client.is_visible ? (isAr ? 'ظاهر' : 'Visible') : (isAr ? 'مخفي' : 'Hidden')}
+                  </Badge>
                 </div>
-                <Badge variant={client.is_visible ? 'accent' : 'default'}>
-                  {client.is_visible ? (isAr ? 'ظاهر' : 'Visible') : (isAr ? 'مخفي' : 'Hidden')}
-                </Badge>
+
+                <h4 className="font-bold text-[#F5F5F5] text-base">
+                  {isAr ? client.name_ar : client.name_en}
+                </h4>
+                <p className="text-xs text-[#9B9B9B] mt-1">
+                  {isAr ? client.profession_ar : client.profession_en}
+                </p>
+                {(client.work_description_ar || client.work_description_en) && (
+                  <p className="text-xs text-[#8B5CF6]/90 mt-2.5 bg-[#8B5CF6]/5 px-2.5 py-1.5 rounded-lg border border-[#8B5CF6]/20 line-clamp-2">
+                    <span className="font-medium text-[#F5F5F5]">{isAr ? 'الأعمال: ' : 'Delivered: '}</span>
+                    {isAr ? (client.work_description_ar || client.work_description_en) : (client.work_description_en || client.work_description_ar)}
+                  </p>
+                )}
               </div>
 
-              <h4 className="font-bold text-[#F5F5F5] text-base">
-                {isAr ? client.name_ar : client.name_en}
-              </h4>
-              <p className="text-xs text-[#9B9B9B] mt-1">
-                {isAr ? client.profession_ar : client.profession_en}
-              </p>
-              {(client.work_description_ar || client.work_description_en) && (
-                <p className="text-xs text-[#8B5CF6]/90 mt-2.5 bg-[#8B5CF6]/5 px-2.5 py-1.5 rounded-lg border border-[#8B5CF6]/20 line-clamp-2">
-                  <span className="font-medium text-[#F5F5F5]">{isAr ? 'الأعمال: ' : 'Delivered: '}</span>
-                  {isAr ? (client.work_description_ar || client.work_description_en) : (client.work_description_en || client.work_description_ar)}
-                </p>
-              )}
-            </div>
+              <div className="flex items-center justify-end gap-2 mt-5 pt-3 border-t border-[#1C1C1C]">
+                <button
+                  onClick={() => openModal(client)}
+                  className="p-1.5 rounded-lg text-[#9B9B9B] hover:text-white hover:bg-[#1A1A1A] transition-colors"
+                >
+                  <Edit2 className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => handleDelete(client)}
+                  className="p-1.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
+                >
+                  <Trash2 className="w-4 h-4" />
+                </button>
+              </div>
+            </Card>
+          ))}
 
-            <div className="flex items-center justify-end gap-2 mt-5 pt-3 border-t border-[#1C1C1C]">
-              <button
-                onClick={() => openModal(client)}
-                className="p-1.5 rounded-lg text-[#9B9B9B] hover:text-white hover:bg-[#1A1A1A] transition-colors"
-              >
-                <Edit2 className="w-4 h-4" />
-              </button>
-              <button
-                onClick={() => handleDelete(client)}
-                className="p-1.5 rounded-lg text-red-400 hover:text-red-300 hover:bg-red-500/10 transition-colors"
-              >
-                <Trash2 className="w-4 h-4" />
-              </button>
+          {!loading && clients.length === 0 && (
+            <div className="col-span-full p-12 text-center text-sm text-[#777] border border-dashed border-[#242424] rounded-2xl">
+              {isAr ? 'لا يوجد عملاء مضافين بعد.' : 'No clients added yet.'}
             </div>
-          </Card>
-        ))}
-
-        {!loading && clients.length === 0 && (
-          <div className="col-span-full p-12 text-center text-sm text-[#777] border border-dashed border-[#242424] rounded-2xl">
-            {isAr ? 'لا يوجد عملاء مضافين بعد.' : 'No clients added yet.'}
-          </div>
-        )}
-      </div>
+          )}
+        </div>
+      )}
 
       {/* Modal Dialog */}
       {showModal && editingClient && (

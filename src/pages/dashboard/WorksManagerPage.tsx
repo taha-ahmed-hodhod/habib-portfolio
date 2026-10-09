@@ -165,12 +165,26 @@ export const WorksManagerPage: React.FC = () => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {works.map((w) => (
-          <Card key={w.id} className="bg-[#0B0B0B] border-[#242424] overflow-hidden p-0 flex flex-col justify-between group">
-            <div className="relative aspect-video bg-[#121212] overflow-hidden">
-              {w.thumbnail_url ? (
-                <img src={w.thumbnail_url} alt={w.title_ar} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <Card key={i} className="bg-[#0B0B0B] border-[#242424] overflow-hidden p-0 animate-pulse">
+              <div className="aspect-video bg-[#141414]" />
+              <div className="p-4 space-y-3">
+                <div className="h-4 bg-[#1C1C1C] rounded w-2/3" />
+                <div className="h-3 bg-[#181818] rounded w-1/3" />
+                <div className="h-3 bg-[#181818] rounded w-full" />
+              </div>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {works.map((w) => (
+            <Card key={w.id} className="bg-[#0B0B0B] border-[#242424] overflow-hidden p-0 flex flex-col justify-between group">
+              <div className="relative aspect-video bg-[#121212] overflow-hidden">
+                {w.thumbnail_url ? (
+                  <img src={w.thumbnail_url} alt={w.title_ar} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-[#444]">
                   {w.media_type === 'video' ? (
@@ -250,6 +264,7 @@ export const WorksManagerPage: React.FC = () => {
           </div>
         )}
       </div>
+      )}
 
       {showModal && editingWork && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">

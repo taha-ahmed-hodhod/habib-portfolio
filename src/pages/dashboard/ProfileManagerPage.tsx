@@ -28,6 +28,7 @@ export const ProfileManagerPage: React.FC = () => {
   })
 
   const [originalAvatarUrl, setOriginalAvatarUrl] = useState<string | null>(null)
+  const [loading, setLoading] = useState(true)
   const [saving, setSaving] = useState(false)
   const [msg, setMsg] = useState<{ type: 'success' | 'error'; text: string } | null>(null)
 
@@ -41,6 +42,8 @@ export const ProfileManagerPage: React.FC = () => {
         }
       } catch (err) {
         console.error('Fetch profile err:', err)
+      } finally {
+        setLoading(false)
       }
     }
     fetchProfile()
@@ -125,9 +128,25 @@ export const ProfileManagerPage: React.FC = () => {
         </div>
       )}
 
-      <form onSubmit={handleSave} className="space-y-6">
-        {/* Profile Avatar Upload Card */}
-        <Card className="bg-[#0B0B0B] border-[#242424] p-6 space-y-4">
+      {loading ? (
+        <Card className="bg-[#0B0B0B] border-[#242424] p-6 space-y-6 animate-pulse">
+          <div className="flex items-center gap-4">
+            <div className="w-24 h-24 rounded-full bg-[#181818]" />
+            <div className="space-y-2 flex-1">
+              <div className="h-4 bg-[#1F1F1F] rounded w-36" />
+              <div className="h-3 bg-[#181818] rounded w-28" />
+            </div>
+          </div>
+          <div className="space-y-4 pt-4 border-t border-[#1C1C1C]">
+            <div className="h-10 bg-[#141414] rounded-xl w-full" />
+            <div className="h-10 bg-[#141414] rounded-xl w-full" />
+            <div className="h-20 bg-[#141414] rounded-xl w-full" />
+          </div>
+        </Card>
+      ) : (
+        <form onSubmit={handleSave} className="space-y-6">
+          {/* Profile Avatar Upload Card */}
+          <Card className="bg-[#0B0B0B] border-[#242424] p-6 space-y-4">
           <h3 className="text-sm font-semibold text-[#8B5CF6] uppercase tracking-wider">
             {isAr ? 'الصورة الشخصية (Profile Avatar)' : 'Profile Avatar Image'}
           </h3>
@@ -301,6 +320,7 @@ export const ProfileManagerPage: React.FC = () => {
           </Button>
         </div>
       </form>
+      )}
 
       {/* Account Security Shortcut Card */}
       <Card className="bg-[#0B0B0B] border-[#242424] p-5 flex items-center justify-between flex-wrap gap-4 mt-8">

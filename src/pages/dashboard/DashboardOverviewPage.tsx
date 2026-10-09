@@ -138,7 +138,20 @@ export const DashboardOverviewPage: React.FC = () => {
 
       {/* Metric Cards Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        {statCards.map((card) => (
+        {loading
+          ? [1, 2, 3, 4].map((i) => (
+              <Card key={i} className="h-36 bg-[#0B0B0B] border-[#242424] p-5 space-y-4 animate-pulse">
+                <div className="flex items-center justify-between">
+                  <div className="w-10 h-10 rounded-xl bg-[#181818]" />
+                  <div className="w-4 h-4 rounded bg-[#181818]" />
+                </div>
+                <div className="space-y-2">
+                  <div className="h-7 bg-[#1F1F1F] rounded w-16" />
+                  <div className="h-3 bg-[#181818] rounded w-28" />
+                </div>
+              </Card>
+            ))
+          : statCards.map((card) => (
           <Link key={card.title} to={card.href} className="group">
             <Card
               className={`h-full bg-gradient-to-br ${card.color} border-[#242424] group-hover:${card.border} transition-all duration-300`}
@@ -152,7 +165,7 @@ export const DashboardOverviewPage: React.FC = () => {
 
               <div className="mt-4">
                 <span className="text-3xl font-extrabold text-[#F5F5F5] block">
-                  {loading ? '...' : card.value}
+                  {card.value}
                 </span>
                 <span className="text-xs font-medium text-[#9B9B9B] mt-1 block">
                   {card.title}

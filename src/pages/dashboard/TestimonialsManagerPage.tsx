@@ -146,8 +146,28 @@ export const TestimonialsManagerPage: React.FC = () => {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
-        {testimonials.map((t) => (
+      {loading ? (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {[1, 2, 3, 4, 5, 6].map((i) => (
+            <Card key={i} className="bg-[#0B0B0B] border-[#242424] p-5 space-y-4 animate-pulse">
+              <div className="flex items-center justify-between">
+                <div className="h-4 bg-[#1F1F1F] rounded w-20" />
+                <div className="w-14 h-5 rounded-full bg-[#181818]" />
+              </div>
+              <div className="space-y-2">
+                <div className="h-3 bg-[#181818] rounded w-full" />
+                <div className="h-3 bg-[#181818] rounded w-4/5" />
+              </div>
+              <div className="pt-2 border-t border-[#1C1C1C] flex items-center justify-between">
+                <div className="h-3.5 bg-[#1F1F1F] rounded w-24" />
+                <div className="w-12 h-6 rounded-lg bg-[#181818]" />
+              </div>
+            </Card>
+          ))}
+        </div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {testimonials.map((t) => (
           <Card key={t.id} className="bg-[#0B0B0B] border-[#242424] p-5 flex flex-col justify-between">
             <div>
               <div className="flex items-start justify-between mb-3">
@@ -225,6 +245,7 @@ export const TestimonialsManagerPage: React.FC = () => {
           </div>
         )}
       </div>
+      )}
 
       {showModal && editingItem && (
         <div className="fixed inset-0 bg-black/80 z-50 flex items-center justify-center p-4">
