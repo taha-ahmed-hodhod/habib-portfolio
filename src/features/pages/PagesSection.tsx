@@ -42,8 +42,12 @@ export const PagesSection: React.FC = () => {
   useEffect(() => {
     loadData()
 
-    const unsub = dataSync.on('pages.updated', () => loadData())
-    return () => unsub()
+    const unsubPages = dataSync.on('pages.updated', () => loadData())
+    const unsubLinks = dataSync.on('links.updated', () => loadData())
+    return () => {
+      unsubPages()
+      unsubLinks()
+    }
   }, [])
 
   return (

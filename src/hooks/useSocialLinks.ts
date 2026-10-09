@@ -11,6 +11,7 @@ async function fetchSocialLinks(): Promise<SocialLink[]> {
     const { data, error } = await supabase
       .from('social_links')
       .select('*')
+      .eq('owner_type', 'profile')
       .eq('is_visible', true)
       .order('sort_order', { ascending: true })
 

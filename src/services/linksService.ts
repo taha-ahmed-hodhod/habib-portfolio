@@ -73,6 +73,7 @@ export async function saveEntityLinks(
 
     // 2. Insert new links
     if (links.length > 0) {
+      const isProfile = ownerType === 'profile'
       const payload = links.map((link, idx) => ({
         owner_type: ownerType,
         owner_id: ownerId,
@@ -83,8 +84,8 @@ export async function saveEntityLinks(
         icon: link.icon || 'link',
         sort_order: link.sort_order ?? idx + 1,
         is_visible: link.is_visible ?? true,
-        show_in_hero: link.show_in_hero ?? true,
-        show_in_footer: link.show_in_footer ?? true,
+        show_in_hero: isProfile ? (link.show_in_hero ?? true) : false,
+        show_in_footer: isProfile ? (link.show_in_footer ?? true) : false,
       }))
 
       const { error: insertError } = await supabase.from('social_links').insert(payload)

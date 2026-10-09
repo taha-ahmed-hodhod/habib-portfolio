@@ -1,5 +1,6 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
+import { Phone, Mail } from 'lucide-react'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { renderPlatformIcon } from '@/components/shared/EntityLinksEditor'
 import { LinkedinIcon, InstagramIcon, FacebookIcon } from '@/components/ui/Icons'
@@ -25,53 +26,76 @@ export const Footer: React.FC = () => {
             </p>
           </div>
 
-          {/* Dynamic Social Icons */}
-          <div className="flex items-center gap-3 flex-wrap justify-center">
-            {footerLinks.length > 0 ? (
-              footerLinks.map((link) => (
-                <a
-                  key={link.id}
-                  href={link.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label={link.platform}
-                  title={isAr ? link.label_ar || link.platform : link.label_en || link.platform}
-                  className="w-10 h-10 rounded-xl bg-[#0F0F0F] border border-[#242424] flex items-center justify-center text-[#9B9B9B] hover:text-[#A78BFA] hover:border-[#8B5CF6]/40 hover:bg-[#8B5CF6]/10 transition-all duration-300"
-                >
-                  {renderPlatformIcon(link.icon || link.platform)}
-                </a>
-              ))
-            ) : (
-              <>
-                <a
-                  href="https://linkedin.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="LinkedIn"
-                  className="w-10 h-10 rounded-xl bg-[#0F0F0F] border border-[#242424] flex items-center justify-center text-[#9B9B9B] hover:text-[#0A66C2] hover:border-[#0A66C2]/40 hover:bg-[#0A66C2]/10 transition-all duration-300"
-                >
-                  <LinkedinIcon className="w-4 h-4" />
-                </a>
-                <a
-                  href="https://instagram.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Instagram"
-                  className="w-10 h-10 rounded-xl bg-[#0F0F0F] border border-[#242424] flex items-center justify-center text-[#9B9B9B] hover:text-[#E4405F] hover:border-[#E4405F]/40 hover:bg-[#E4405F]/10 transition-all duration-300"
-                >
-                  <InstagramIcon className="w-4 h-4" />
-                </a>
-                <a
-                  href="https://facebook.com"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Facebook"
-                  className="w-10 h-10 rounded-xl bg-[#0F0F0F] border border-[#242424] flex items-center justify-center text-[#9B9B9B] hover:text-[#1877F2] hover:border-[#1877F2]/40 hover:bg-[#1877F2]/10 transition-all duration-300"
-                >
-                  <FacebookIcon className="w-4 h-4" />
-                </a>
-              </>
-            )}
+          {/* Social Icons & Contact Info */}
+          <div className="flex flex-col items-center md:items-end gap-3">
+            {/* Dynamic Social Icons */}
+            <div className="flex items-center gap-3 flex-wrap justify-center md:justify-end">
+              {footerLinks.length > 0 ? (
+                footerLinks.map((link) => (
+                  <a
+                    key={link.id}
+                    href={link.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label={link.platform}
+                    title={isAr ? link.label_ar || link.platform : link.label_en || link.platform}
+                    className="w-10 h-10 rounded-xl bg-[#0F0F0F] border border-[#242424] flex items-center justify-center text-[#9B9B9B] hover:text-[#A78BFA] hover:border-[#8B5CF6]/40 hover:bg-[#8B5CF6]/10 transition-all duration-300"
+                  >
+                    {renderPlatformIcon(link.icon || link.platform)}
+                  </a>
+                ))
+              ) : (
+                <>
+                  <a
+                    href="https://linkedin.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="LinkedIn"
+                    className="w-10 h-10 rounded-xl bg-[#0F0F0F] border border-[#242424] flex items-center justify-center text-[#9B9B9B] hover:text-[#0A66C2] hover:border-[#0A66C2]/40 hover:bg-[#0A66C2]/10 transition-all duration-300"
+                  >
+                    <LinkedinIcon className="w-4 h-4" />
+                  </a>
+                  <a
+                    href="https://instagram.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Instagram"
+                    className="w-10 h-10 rounded-xl bg-[#0F0F0F] border border-[#242424] flex items-center justify-center text-[#9B9B9B] hover:text-[#E4405F] hover:border-[#E4405F]/40 hover:bg-[#E4405F]/10 transition-all duration-300"
+                  >
+                    <InstagramIcon className="w-4 h-4" />
+                  </a>
+                  <a
+                    href="https://facebook.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Facebook"
+                    className="w-10 h-10 rounded-xl bg-[#0F0F0F] border border-[#242424] flex items-center justify-center text-[#9B9B9B] hover:text-[#1877F2] hover:border-[#1877F2]/40 hover:bg-[#1877F2]/10 transition-all duration-300"
+                  >
+                    <FacebookIcon className="w-4 h-4" />
+                  </a>
+                </>
+              )}
+            </div>
+
+            {/* Direct Contact Links */}
+            <div className="flex flex-col items-center md:items-end gap-2 pt-1 text-xs">
+              <a
+                href="tel:+201007430812"
+                dir="ltr"
+                className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#0F0F0F]/80 border border-[#242424]/80 text-[#B3B3B3] hover:text-white hover:border-[#8B5CF6]/40 hover:bg-[#8B5CF6]/10 transition-all duration-300 group"
+              >
+                <Phone className="w-3.5 h-3.5 text-[#8B5CF6] group-hover:scale-110 transition-transform shrink-0" />
+                <span className="font-medium tracking-wide" dir="ltr">+20 10 07430812</span>
+              </a>
+
+              <a
+                href="mailto:habib650@gmail.com"
+                className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#0F0F0F]/80 border border-[#242424]/80 text-[#B3B3B3] hover:text-white hover:border-[#8B5CF6]/40 hover:bg-[#8B5CF6]/10 transition-all duration-300 group"
+              >
+                <Mail className="w-3.5 h-3.5 text-[#8B5CF6] group-hover:scale-110 transition-transform shrink-0" />
+                <span className="font-medium">habib650@gmail.com</span>
+              </a>
+            </div>
           </div>
         </div>
 

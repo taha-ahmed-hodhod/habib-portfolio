@@ -23,7 +23,11 @@ export const LinksManagerPage: React.FC = () => {
     try {
       setLoading(true)
       const [linksRes, profileRes] = await Promise.all([
-        supabase.from('social_links').select('*').order('sort_order', { ascending: true }),
+        supabase
+          .from('social_links')
+          .select('*')
+          .eq('owner_type', 'profile')
+          .order('sort_order', { ascending: true }),
         supabase.from('profiles').select('id').limit(1).single(),
       ])
 
@@ -51,7 +55,7 @@ export const LinksManagerPage: React.FC = () => {
     setSaving(true)
     try {
       // Ensure we have a valid owner_id for the link
-      let targetOwnerId = editingLink.owner_id || profileId
+      let targetOwnerId = profileId
       if (!targetOwnerId) {
         const { data: prof } = await supabase.from('profiles').select('id').limit(1).single()
         targetOwnerId = prof?.id || null
@@ -71,7 +75,7 @@ export const LinksManagerPage: React.FC = () => {
         label_en: editingLink.label_en?.trim() || editingLink.platform?.trim() || 'Link',
         url: editingLink.url?.trim() || '',
         icon: editingLink.icon || 'link',
-        owner_type: editingLink.owner_type || 'profile',
+        owner_type: 'profile' as const,
         owner_id: targetOwnerId,
         sort_order: editingLink.sort_order ?? (links.length + 1),
         is_visible: editingLink.is_visible ?? true,
