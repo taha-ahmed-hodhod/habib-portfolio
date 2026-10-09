@@ -264,13 +264,20 @@ export const LinksManagerPage: React.FC = () => {
                     onChange={(e) => {
                       const plat = e.target.value
                       const platObj = COMMON_PLATFORMS.find((p) => p.name === plat)
+                      const isWhatsApp = plat.toLowerCase().includes('whatsapp')
+                      const isDefaultOrEmpty =
+                        !editingLink.url ||
+                        editingLink.url === 'https://' ||
+                        COMMON_PLATFORMS.some((p) => p.defaultUrl === editingLink.url) ||
+                        isWhatsApp
+
                       setEditingLink({
                         ...editingLink,
                         platform: plat,
-                        label_ar: editingLink.label_ar || plat,
+                        label_ar: isWhatsApp ? 'واتساب' : (editingLink.label_ar === 'واتساب' ? plat : (editingLink.label_ar || plat)),
                         label_en: editingLink.label_en || plat,
                         icon: platObj?.icon || 'link',
-                        url: editingLink.url && editingLink.url !== 'https://' ? editingLink.url : (platObj?.defaultUrl || 'https://'),
+                        url: isWhatsApp ? 'https://wa.me/201007430812' : (isDefaultOrEmpty ? (platObj?.defaultUrl || 'https://') : editingLink.url),
                       })
                     }}
                     className="bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
@@ -285,7 +292,18 @@ export const LinksManagerPage: React.FC = () => {
                     type="text"
                     required
                     value={editingLink.platform || ''}
-                    onChange={(e) => setEditingLink({ ...editingLink, platform: e.target.value })}
+                    onChange={(e) => {
+                      const val = e.target.value
+                      const isWa = val.toLowerCase().includes('whatsapp') || val.includes('واتساب')
+                      const shouldAutoFill = isWa && (!editingLink.url || editingLink.url === 'https://' || COMMON_PLATFORMS.some((p) => p.defaultUrl === editingLink.url))
+                      setEditingLink({
+                        ...editingLink,
+                        platform: val,
+                        label_ar: isWa && (!editingLink.label_ar || editingLink.label_ar === 'انستقرام') ? 'واتساب' : editingLink.label_ar,
+                        url: shouldAutoFill ? 'https://wa.me/201007430812' : editingLink.url,
+                        icon: isWa ? 'whatsapp' : editingLink.icon,
+                      })
+                    }}
                     placeholder="Platform name"
                     className="flex-1 bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
                   />
@@ -314,7 +332,14 @@ export const LinksManagerPage: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-xs text-[#B3B3B3] mb-1">{isAr ? 'الرابط (URL)' : 'URL'}</label>
+                <div className="flex items-center justify-between mb-1">
+                  <label className="block text-xs text-[#B3B3B3]">{isAr ? 'الرابط (URL)' : 'URL'}</label>
+                  {editingLink.platform?.toLowerCase().includes('whatsapp') && (
+                    <span className="text-[10px] text-[#A78BFA] bg-[#8B5CF6]/10 px-2 py-0.5 rounded-md border border-[#8B5CF6]/20">
+                      {isAr ? 'مجهز برقم حبيب تلقائياً (يمكنك تعديله)' : 'Pre-filled with Habib’s number (editable)'}
+                    </span>
+                  )}
+                </div>
                 <input
                   type="url"
                   required

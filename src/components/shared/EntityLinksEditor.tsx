@@ -41,9 +41,9 @@ export const COMMON_PLATFORMS = [
   { name: 'YouTube', icon: 'youtube', defaultUrl: 'https://youtube.com/' },
   { name: 'Facebook', icon: 'facebook', defaultUrl: 'https://facebook.com/' },
   { name: 'LinkedIn', icon: 'linkedin', defaultUrl: 'https://linkedin.com/in/' },
+  { name: 'WhatsApp', icon: 'whatsapp', defaultUrl: 'https://wa.me/201007430812' },
   { name: 'Website', icon: 'website', defaultUrl: 'https://' },
   { name: 'Behance', icon: 'behance', defaultUrl: 'https://behance.net/' },
-  { name: 'WhatsApp', icon: 'whatsapp', defaultUrl: 'https://wa.me/' },
   { name: 'X (Twitter)', icon: 'twitter', defaultUrl: 'https://x.com/' },
   { name: 'Custom', icon: 'custom', defaultUrl: 'https://' },
 ]
@@ -73,11 +73,12 @@ export const EntityLinksEditor: React.FC<EntityLinksEditorProps> = ({
 
   const handleAddLink = () => {
     const platObj = COMMON_PLATFORMS.find((p) => p.name === selectedPlatform)
+    const isWa = selectedPlatform.toLowerCase().includes('whatsapp')
     const newLink: Partial<SocialLink> = {
       platform: selectedPlatform,
-      label_ar: selectedPlatform,
+      label_ar: isWa ? 'واتساب' : selectedPlatform,
       label_en: selectedPlatform,
-      url: platObj?.defaultUrl || 'https://',
+      url: platObj?.defaultUrl || (isWa ? 'https://wa.me/201007430812' : 'https://'),
       icon: platObj?.icon || 'link',
       is_visible: true,
       sort_order: links.length + 1,
