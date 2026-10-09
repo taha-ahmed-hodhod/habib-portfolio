@@ -89,11 +89,11 @@ export const Footer: React.FC = () => {
               </a>
 
               <a
-                href="mailto:habib650@gmail.com"
+                href="mailto:hb202065@gmail.com"
                 className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#0F0F0F]/80 border border-[#242424]/80 text-[#B3B3B3] hover:text-white hover:border-[#8B5CF6]/40 hover:bg-[#8B5CF6]/10 transition-all duration-300 group"
               >
                 <Mail className="w-3.5 h-3.5 text-[#8B5CF6] group-hover:scale-110 transition-transform shrink-0" />
-                <span className="font-medium">habib650@gmail.com</span>
+                <span className="font-medium">hb202065@gmail.com</span>
               </a>
             </div>
           </div>

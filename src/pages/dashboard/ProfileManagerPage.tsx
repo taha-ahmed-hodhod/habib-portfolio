@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Save, AlertCircle, CheckCircle2 } from 'lucide-react'
+import { Link } from 'react-router-dom'
+import { Save, AlertCircle, CheckCircle2, KeyRound, ShieldCheck } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import type { Profile } from '@/types/database'
 import { Card } from '@/components/ui/Card'
@@ -300,6 +301,31 @@ export const ProfileManagerPage: React.FC = () => {
           </Button>
         </div>
       </form>
+
+      {/* Account Security Shortcut Card */}
+      <Card className="bg-[#0B0B0B] border-[#242424] p-5 flex items-center justify-between flex-wrap gap-4 mt-8">
+        <div className="flex items-center gap-3.5">
+          <div className="w-10 h-10 rounded-xl bg-[#8B5CF6]/15 border border-[#8B5CF6]/30 flex items-center justify-center text-[#8B5CF6] shrink-0">
+            <KeyRound className="w-5 h-5" />
+          </div>
+          <div>
+            <h4 className="text-sm font-bold text-white">
+              {isAr ? 'أمان الحساب وكلمة المرور' : 'Account Security & Password'}
+            </h4>
+            <p className="text-xs text-[#9B9B9B] mt-0.5">
+              {isAr
+                ? 'هل ترغب في تغيير كلمة المرور لحساب المشرف؟'
+                : 'Need to update your admin dashboard login password?'}
+            </p>
+          </div>
+        </div>
+
+        <Link to="/dashboard/settings?tab=security">
+          <Button variant="outline" size="sm" icon={<ShieldCheck className="w-4 h-4 text-[#8B5CF6]" />}>
+            {isAr ? 'تغيير كلمة المرور' : 'Change Password'}
+          </Button>
+        </Link>
+      </Card>
     </div>
   )
 }

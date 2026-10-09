@@ -44,7 +44,7 @@ export const DashboardLayout: React.FC = () => {
     { label: isAr ? 'التصنيفات' : 'Categories', path: '/dashboard/works/categories', icon: FolderTree },
     { label: isAr ? 'آراء العملاء' : 'Testimonials', path: '/dashboard/testimonials', icon: MessageSquareQuote },
     { label: isAr ? 'الروابط الديناميكية' : 'Dynamic Links', path: '/dashboard/links', icon: Link2 },
-    { label: isAr ? 'إعدادات الموقع' : 'Site Settings', path: '/dashboard/settings', icon: Settings },
+    { label: isAr ? 'الإعدادات والأمان' : 'Settings & Security', path: '/dashboard/settings', icon: Settings },
   ]
 
   return (
@@ -161,14 +161,18 @@ export const DashboardLayout: React.FC = () => {
               <span>{isAr ? 'English' : 'العربية'}</span>
             </button>
 
-            <div className="flex items-center gap-2.5 pl-2 border-l border-[#242424]">
+            <Link
+              to="/dashboard/settings?tab=security"
+              title={isAr ? 'أمان الحساب وتغيير كلمة المرور' : 'Account Security & Password'}
+              className="flex items-center gap-2.5 pl-2 border-l border-[#242424] hover:opacity-80 transition-opacity"
+            >
               <div className="w-8 h-8 rounded-full bg-[#181818] border border-[#303030] flex items-center justify-center text-xs font-bold text-[#A78BFA]">
                 H
               </div>
               <span className="text-xs font-medium text-[#D1D1D1] hidden sm:block">
                 Habib Al-Rahman
               </span>
-            </div>
+            </Link>
           </div>
         </header>
 
