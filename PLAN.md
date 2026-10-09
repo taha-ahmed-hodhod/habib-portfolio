@@ -1324,3 +1324,10 @@ Normal content management must happen entirely through the Dashboard.
 - **Loading Skeletons:** All 8 dashboard manager pages (`Works`, `Clients`, `Pages`, `Categories`, `Testimonials`, `Links`, `Profile`, `Overview`) provide animated dark skeleton grids during Supabase async queries to prevent layout shifting and flash of placeholder data.
 - **Account Security:** Admin password update flow directly in `SettingsManagerPage` via `supabase.auth.updateUser`.
 
+### 8. Professional Social Media Link Preview (Open Graph & Twitter Cards)
+- **Static Open Graph `<head>`:** Baked directly into `index.html` to guarantee that social scrapers (WhatsApp, Facebook, Twitter, Telegram, LinkedIn) that do not execute client-side JavaScript receive complete metadata.
+- **OG Assets:** `public/habib.jpg` (1200×1200px) personal photograph of Habib for direct visual recognition, with alternative luxury monogram card `public/og-image.png`.
+- **Dynamic SEO Hook:** `useSEO` synchronizes browser document title, description, and Open Graph tags during SPA client routing and language changes.
+- **Production Host:** `https://habib-portfolio-gamma.vercel.app/`.
+
+

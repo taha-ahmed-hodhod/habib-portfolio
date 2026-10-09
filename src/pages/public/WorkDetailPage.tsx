@@ -7,6 +7,7 @@ import type { Work } from '@/types/database'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { Card } from '@/components/ui/Card'
+import { useSEO } from '@/hooks/useSEO'
 
 export const WorkDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -15,6 +16,14 @@ export const WorkDetailPage: React.FC = () => {
 
   const [work, setWork] = useState<Work | null>(null)
   const [loading, setLoading] = useState(true)
+
+  useSEO({
+    title: work ? (isAr ? work.title_ar : work.title_en) : undefined,
+    description: work ? (isAr ? work.description_ar : work.description_en) : undefined,
+    image: work?.thumbnail_url || (work?.media_type === 'image' ? work?.media_url : undefined),
+    url: id ? `/work/${id}` : undefined,
+    type: 'article',
+  })
 
   useEffect(() => {
     async function fetchWork() {

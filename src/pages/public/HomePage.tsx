@@ -7,8 +7,11 @@ import { ClientsSection } from '@/features/clients/ClientsSection'
 import { PagesSection } from '@/features/pages/PagesSection'
 import { TestimonialsSection } from '@/features/testimonials/TestimonialsSection'
 import { dataSync } from '@/services/dataSync'
+import { useSEO } from '@/hooks/useSEO'
 
 export const HomePage: React.FC = () => {
+  useSEO()
+
   const [settings, setSettings] = useState<Partial<SiteSettings>>({
     hero_visible: true,
     clients_visible: true,

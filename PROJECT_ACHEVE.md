@@ -223,3 +223,32 @@
 - [x] **فحص الإنتاج والجودة:**
   - نجاح بناء المشروع `npm run build` بنجاح تام وبدون أي أخطاء (Exit Code 0).
 
+---
+
+### 14. نظام المعاينة الاحترافية لوسائل التواصل الاجتماعي (Professional Open Graph & Social Preview) ✅
+- [x] **صورة المعاينة الرسمية لحبيب (`public/habib.jpg`):**
+  - اعتماد صورة حبيب الشخصية الاحترافية `habib.jpg` عالية الجودة كصورة رئيسية لمعاينات وسائل التواصل الاجتماعي برابط مباشر: `https://habib-portfolio-gamma.vercel.app/habib.jpg`.
+  - مع توفير بطاقات المعاينة البديلة بشعار H الفاخر (`og-image.png`).
+- [x] **وسوم Open Graph و Twitter الثابتة في `index.html`:**
+  - تضمين كامل الوسوم الرسمية في `<head>` بدون الاعتماد على الجافاسكريبت لضمان قراءتها الفورية من واتساب وفيسبوك:
+    - `og:type = website`
+    - `og:site_name = Habib Al-Rahman Portfolio`
+    - `og:url = https://habib-portfolio-gamma.vercel.app/`
+    - `og:title = Habib Al-Rahman | Digital Marketing & AI Video Creation`
+    - `og:description = Explore Habib Al-Rahman's portfolio featuring digital marketing, AI video creation, client projects, creative work, and digital experiences.`
+    - `og:image` & `og:image:secure_url = https://habib-portfolio-gamma.vercel.app/habib.jpg`
+    - `og:image:type = image/jpeg`
+    - `og:image:width = 1200` & `og:image:height = 1200`
+    - `og:image:alt = Habib Al-Rahman - Digital Marketing & AI Video Creation Portfolio`
+    - `og:locale = ar_AR` و `og:locale:alternate = en_US`
+    - `twitter:card = summary_large_image` و `twitter:image = https://habib-portfolio-gamma.vercel.app/habib.jpg`
+    - الرابط المعياري الأساسي `canonical link = https://habib-portfolio-gamma.vercel.app/`.
+- [x] **نظام التزامن الديناميكي (`useSEO.ts`):**
+  - هوك تفاعلي لتحديث عنوان التبويب والوسوم ديناميكياً عند التنقل وتغيير اللغات وعرض الأعمال الفردية `/work/:id`.
+- [x] **إعدادات النطاق:**
+  - تثبيت النطاق الإنتاجي `VITE_SITE_URL=https://habib-portfolio-gamma.vercel.app` في `.env` و `.env.example`.
+- [x] **فحص الإنتاج:**
+  - اجتياز `npm run build` بنجاح وتوليد وسوم الـ Open Graph والصور داخل `dist/index.html` (Exit Code 0).
+
+
+

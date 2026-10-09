@@ -738,18 +738,15 @@ Respect reduced motion preferences.
 
 ---
 
-# 25. SEO
+# 25. SEO & Social Media Link Previews
 
-Implement basic SEO:
+Implement robust SEO & Open Graph protocol:
 
-- page titles
-- descriptions
-- Open Graph metadata where appropriate
-- semantic headings
-- clean URLs
-- descriptive image alt text
-
-Work detail pages should have dynamic metadata where practical.
+- Open Graph & Twitter Card tags must be statically present in `index.html`'s `<head>` to ensure non-JS crawlers (WhatsApp, Facebook, Twitter, Telegram, LinkedIn) capture rich previews.
+- Preview Image: High-contrast 1200 × 630px raster image (`/og-image.png`) with absolute HTTPS URL. Never use relative or localhost paths.
+- Canonical URLs must resolve to the verified production domain (`https://habib-portfolio-gamma.vercel.app/`).
+- Dynamic SEO: Use `useSEO` hook to update `document.title` and meta tags during client-side SPA navigation.
+- Semantic HTML and descriptive image alt tags.
 
 ---
 
