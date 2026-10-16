@@ -5,6 +5,7 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/', // <--- تمت إضافة هذا السطر هنا
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
@@ -12,4 +13,3 @@ export default defineConfig({
     },
   },
 })
-
