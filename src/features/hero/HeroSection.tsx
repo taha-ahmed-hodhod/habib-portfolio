@@ -93,14 +93,14 @@ export const HeroSection: React.FC = () => {
       className="relative min-h-[90vh] flex items-center justify-center pt-12 pb-20 overflow-hidden"
     >
       {/* Background ambient lighting */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-gradient-to-tr from-red-600/15 via-red-900/8 to-red-950/10 rounded-full blur-[140px] pointer-events-none -z-10" />
-      <div className="absolute -top-10 left-10 w-72 h-72 bg-red-950/8 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-gradient-to-tr from-[#B51D19]/15 via-[#B51D19]/5 to-[#080707]/20 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute -top-10 left-10 w-72 h-72 bg-[#B51D19]/5 rounded-full blur-3xl pointer-events-none -z-10" />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center flex flex-col items-center">
         {/* Profile Avatar with Glowing Halo Ring */}
         <div className="relative mb-8 group">
           <div className="absolute -inset-2 rounded-full hero-glow-animated opacity-70 blur-md group-hover:opacity-100 transition-opacity duration-500" />
-          <div className="relative w-36 h-36 sm:w-44 sm:h-44 rounded-full p-[4px] hero-border-animated">
+          <div className="relative w-36 h-36 sm:w-44 sm:h-44 rounded-full p-[5px] hero-border-animated">
             <div className="w-full h-full rounded-full overflow-hidden bg-[#0A0A0A] flex items-center justify-center relative">
               {loading && !profile.avatar_url ? (
                 <Skeleton variant="circular" className="w-full h-full" />
@@ -130,7 +130,7 @@ export const HeroSection: React.FC = () => {
         </h1>
 
         {/* Subtitle / Job Title */}
-        <h2 className="text-base sm:text-xl font-bold bg-gradient-to-r from-red-500 via-red-400 to-red-700 bg-clip-text text-transparent mb-5 max-w-2xl">
+        <h2 className="text-base sm:text-xl font-bold text-[#D4D4D4] mb-5 max-w-2xl">
           {isAr ? profile.title_ar : profile.title_en}
         </h2>
 
@@ -157,7 +157,7 @@ export const HeroSection: React.FC = () => {
                 href={link.url}
                 target="_blank"
                 rel="noreferrer"
-                className="w-11 h-11 rounded-2xl bg-[#0F0F0F] border border-[#242424] hover:border-[#8B5CF6]/60 hover:bg-[#8B5CF6]/15 flex items-center justify-center text-[#9B9B9B] hover:text-[#A78BFA] transition-all duration-300 shadow-lg shadow-black/40"
+                className="w-11 h-11 rounded-2xl bg-[#0F0F0F] border border-[#242424] hover:border-[#B51D19]/60 hover:bg-[#B51D19]/15 flex items-center justify-center text-[#9B9B9B] hover:text-[#E63B32] transition-all duration-300 shadow-lg shadow-black/40"
                 aria-label={link.platform}
                 title={isAr ? link.label_ar || link.platform : link.label_en || link.platform}
               >
@@ -169,7 +169,7 @@ export const HeroSection: React.FC = () => {
 
         {/* Live Animated Statistics Cards */}
         <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 sm:gap-4 w-full max-w-xl mb-10">
-          <div className="p-4 sm:p-5 rounded-2xl bg-[#0A0A0A] border border-[#202020] hover:border-[#8B5CF6]/40 transition-all duration-300 flex flex-col items-center">
+          <div className="p-4 sm:p-5 rounded-2xl bg-[#0A0A0A] border border-[#202020] hover:border-[#B51D19]/40 transition-all duration-300 flex flex-col items-center">
             <span className="text-2xl sm:text-3xl font-extrabold text-[#F5F5F5] tracking-tight">
               {displayProjects}+
             </span>
@@ -178,7 +178,7 @@ export const HeroSection: React.FC = () => {
             </span>
           </div>
 
-          <div className="p-4 sm:p-5 rounded-2xl bg-[#0A0A0A] border border-[#202020] hover:border-[#8B5CF6]/40 transition-all duration-300 flex flex-col items-center">
+          <div className="p-4 sm:p-5 rounded-2xl bg-[#0A0A0A] border border-[#202020] hover:border-[#B51D19]/40 transition-all duration-300 flex flex-col items-center">
             <span className="text-2xl sm:text-3xl font-extrabold text-[#F5F5F5] tracking-tight">
               {displayClients}+
             </span>
@@ -187,7 +187,7 @@ export const HeroSection: React.FC = () => {
             </span>
           </div>
 
-          <div className="col-span-2 sm:col-span-1 p-4 sm:p-5 rounded-2xl bg-[#0A0A0A] border border-[#202020] hover:border-[#8B5CF6]/40 transition-all duration-300 flex flex-col items-center">
+          <div className="col-span-2 sm:col-span-1 p-4 sm:p-5 rounded-2xl bg-[#0A0A0A] border border-[#202020] hover:border-[#B51D19]/40 transition-all duration-300 flex flex-col items-center">
             <span className="text-2xl sm:text-3xl font-extrabold text-[#F5F5F5] tracking-tight">
               {displayYears}+
             </span>

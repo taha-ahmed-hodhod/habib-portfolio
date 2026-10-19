@@ -147,7 +147,7 @@ export const ProfileManagerPage: React.FC = () => {
         <form onSubmit={handleSave} className="space-y-6">
           {/* Profile Avatar Upload Card */}
           <Card className="bg-[#0B0B0B] border-[#242424] p-6 space-y-4">
-          <h3 className="text-sm font-semibold text-[#8B5CF6] uppercase tracking-wider">
+          <h3 className="text-sm font-semibold text-[#E63B32] uppercase tracking-wider">
             {isAr ? 'الصورة الشخصية (Profile Avatar)' : 'Profile Avatar Image'}
           </h3>
 
@@ -167,7 +167,7 @@ export const ProfileManagerPage: React.FC = () => {
 
         {/* Personal Information Card */}
         <Card className="bg-[#0B0B0B] border-[#242424] p-6 space-y-6">
-          <h3 className="text-sm font-semibold text-[#8B5CF6] uppercase tracking-wider">
+          <h3 className="text-sm font-semibold text-[#E63B32] uppercase tracking-wider">
             {isAr ? 'البيانات الشخصية والمسميات' : 'Personal Information & Titles'}
           </h3>
 
@@ -181,7 +181,7 @@ export const ProfileManagerPage: React.FC = () => {
                 required
                 value={profile.full_name_ar || ''}
                 onChange={(e) => setProfile({ ...profile, full_name_ar: e.target.value })}
-                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#8B5CF6]"
+                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#B51D19]"
               />
             </div>
 
@@ -194,7 +194,7 @@ export const ProfileManagerPage: React.FC = () => {
                 required
                 value={profile.full_name_en || ''}
                 onChange={(e) => setProfile({ ...profile, full_name_en: e.target.value })}
-                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#8B5CF6]"
+                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#B51D19]"
               />
             </div>
           </div>
@@ -209,7 +209,7 @@ export const ProfileManagerPage: React.FC = () => {
                 required
                 value={profile.title_ar || ''}
                 onChange={(e) => setProfile({ ...profile, title_ar: e.target.value })}
-                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#8B5CF6]"
+                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#B51D19]"
               />
             </div>
 
@@ -222,7 +222,7 @@ export const ProfileManagerPage: React.FC = () => {
                 required
                 value={profile.title_en || ''}
                 onChange={(e) => setProfile({ ...profile, title_en: e.target.value })}
-                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#8B5CF6]"
+                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#B51D19]"
               />
             </div>
           </div>
@@ -236,7 +236,7 @@ export const ProfileManagerPage: React.FC = () => {
                 rows={4}
                 value={profile.bio_ar || ''}
                 onChange={(e) => setProfile({ ...profile, bio_ar: e.target.value })}
-                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#8B5CF6]"
+                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#B51D19]"
               />
             </div>
 
@@ -248,7 +248,7 @@ export const ProfileManagerPage: React.FC = () => {
                 rows={4}
                 value={profile.bio_en || ''}
                 onChange={(e) => setProfile({ ...profile, bio_en: e.target.value })}
-                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#8B5CF6]"
+                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#B51D19]"
               />
             </div>
           </div>
@@ -256,7 +256,7 @@ export const ProfileManagerPage: React.FC = () => {
 
         {/* Statistics Card */}
         <Card className="bg-[#0B0B0B] border-[#242424] p-6 space-y-4">
-          <h3 className="text-sm font-semibold text-[#8B5CF6] uppercase tracking-wider">
+          <h3 className="text-sm font-semibold text-[#E63B32] uppercase tracking-wider">
             {isAr ? 'الإحصائيات والأرقام' : 'Statistics (Live Counters)'}
           </h3>
 
@@ -272,7 +272,7 @@ export const ProfileManagerPage: React.FC = () => {
                 onChange={(e) =>
                   setProfile({ ...profile, projects_count: parseInt(e.target.value) || 0 })
                 }
-                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#8B5CF6]"
+                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#B51D19]"
               />
             </div>
 
@@ -287,7 +287,7 @@ export const ProfileManagerPage: React.FC = () => {
                 onChange={(e) =>
                   setProfile({ ...profile, clients_count: parseInt(e.target.value) || 0 })
                 }
-                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#8B5CF6]"
+                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#B51D19]"
               />
             </div>
 
@@ -302,7 +302,7 @@ export const ProfileManagerPage: React.FC = () => {
                 onChange={(e) =>
                   setProfile({ ...profile, experience_years: parseInt(e.target.value) || 0 })
                 }
-                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#8B5CF6]"
+                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#B51D19]"
               />
             </div>
           </div>
@@ -325,7 +325,7 @@ export const ProfileManagerPage: React.FC = () => {
       {/* Account Security Shortcut Card */}
       <Card className="bg-[#0B0B0B] border-[#242424] p-5 flex items-center justify-between flex-wrap gap-4 mt-8">
         <div className="flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-[#8B5CF6]/15 border border-[#8B5CF6]/30 flex items-center justify-center text-[#8B5CF6] shrink-0">
+          <div className="w-10 h-10 rounded-xl bg-[#B51D19]/15 border border-[#B51D19]/30 flex items-center justify-center text-[#E63B32] shrink-0">
             <KeyRound className="w-5 h-5" />
           </div>
           <div>
@@ -341,7 +341,7 @@ export const ProfileManagerPage: React.FC = () => {
         </div>
 
         <Link to="/dashboard/settings?tab=security">
-          <Button variant="outline" size="sm" icon={<ShieldCheck className="w-4 h-4 text-[#8B5CF6]" />}>
+          <Button variant="outline" size="sm" icon={<ShieldCheck className="w-4 h-4 text-[#E63B32]" />}>
             {isAr ? 'تغيير كلمة المرور' : 'Change Password'}
           </Button>
         </Link>

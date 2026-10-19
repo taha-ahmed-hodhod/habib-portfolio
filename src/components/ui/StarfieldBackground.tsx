@@ -168,12 +168,12 @@ export function StarfieldBackground({
     >
       <canvas ref={canvasRef} className="absolute inset-0 h-full w-full pointer-events-none" />
 
-      {/* Subtle purple / violet nebula glow */}
+      {/* Subtle crimson / red nebula glow */}
       <div
-        className="pointer-events-none absolute inset-0 opacity-30"
+        className="pointer-events-none absolute inset-0 opacity-25"
         style={{
           background:
-            'radial-gradient(ellipse at 30% 40%, rgba(139, 92, 246, 0.15) 0%, transparent 55%), radial-gradient(ellipse at 70% 60%, rgba(217, 70, 239, 0.08) 0%, transparent 50%)',
+            'radial-gradient(ellipse at 30% 40%, rgba(181, 29, 25, 0.15) 0%, transparent 55%), radial-gradient(ellipse at 70% 60%, rgba(230, 59, 50, 0.08) 0%, transparent 50%)',
         }}
       />
 

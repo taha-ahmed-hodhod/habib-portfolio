@@ -68,8 +68,8 @@ export const DashboardOverviewPage: React.FC = () => {
       value: stats.works,
       icon: Film,
       href: '/dashboard/works',
-      color: 'from-[#8B5CF6]/20 to-[#6D28D9]/5',
-      border: 'border-[#8B5CF6]/30',
+      color: 'from-[#B51D19]/20 to-[#991815]/5',
+      border: 'border-[#B51D19]/30',
       badge: isAr ? 'فيديو وصور' : 'Videos & Images',
     },
     {
@@ -189,21 +189,21 @@ export const DashboardOverviewPage: React.FC = () => {
             {isAr ? 'إجراءات سريعة' : 'Quick Actions'}
           </h3>
           <div className="grid grid-cols-2 gap-3">
-            <Link to="/dashboard/profile" className="p-3 rounded-xl bg-[#121212] border border-[#202020] hover:border-[#8B5CF6]/40 hover:bg-[#181818] transition-all text-xs font-semibold text-[#D1D1D1] flex items-center justify-between">
+            <Link to="/dashboard/profile" className="p-3 rounded-xl bg-[#121212] border border-[#202020] hover:border-[#B51D19]/40 hover:bg-[#181818] transition-all text-xs font-semibold text-[#D1D1D1] flex items-center justify-between">
               <span>{isAr ? 'تعديل البروفايل والإحصائيات' : 'Edit Profile & Stats'}</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-[#8B5CF6]" />
+              <ArrowUpRight className="w-3.5 h-3.5 text-[#E63B32]" />
             </Link>
-            <Link to="/dashboard/clients" className="p-3 rounded-xl bg-[#121212] border border-[#202020] hover:border-[#8B5CF6]/40 hover:bg-[#181818] transition-all text-xs font-semibold text-[#D1D1D1] flex items-center justify-between">
+            <Link to="/dashboard/clients" className="p-3 rounded-xl bg-[#121212] border border-[#202020] hover:border-[#B51D19]/40 hover:bg-[#181818] transition-all text-xs font-semibold text-[#D1D1D1] flex items-center justify-between">
               <span>{isAr ? 'إدارة العملاء والشركاء' : 'Manage Clients'}</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-[#8B5CF6]" />
+              <ArrowUpRight className="w-3.5 h-3.5 text-[#E63B32]" />
             </Link>
-            <Link to="/dashboard/pages" className="p-3 rounded-xl bg-[#121212] border border-[#202020] hover:border-[#8B5CF6]/40 hover:bg-[#181818] transition-all text-xs font-semibold text-[#D1D1D1] flex items-center justify-between">
+            <Link to="/dashboard/pages" className="p-3 rounded-xl bg-[#121212] border border-[#202020] hover:border-[#B51D19]/40 hover:bg-[#181818] transition-all text-xs font-semibold text-[#D1D1D1] flex items-center justify-between">
               <span>{isAr ? 'إدارة صفحات وعلامات حبيب' : 'Manage Pages & Brands'}</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-[#8B5CF6]" />
+              <ArrowUpRight className="w-3.5 h-3.5 text-[#E63B32]" />
             </Link>
-            <Link to="/dashboard/settings" className="p-3 rounded-xl bg-[#121212] border border-[#202020] hover:border-[#8B5CF6]/40 hover:bg-[#181818] transition-all text-xs font-semibold text-[#D1D1D1] flex items-center justify-between">
+            <Link to="/dashboard/settings" className="p-3 rounded-xl bg-[#121212] border border-[#202020] hover:border-[#B51D19]/40 hover:bg-[#181818] transition-all text-xs font-semibold text-[#D1D1D1] flex items-center justify-between">
               <span>{isAr ? 'ترتيب وظهور الأقسام' : 'Section Order & Visibility'}</span>
-              <ArrowUpRight className="w-3.5 h-3.5 text-[#8B5CF6]" />
+              <ArrowUpRight className="w-3.5 h-3.5 text-[#E63B32]" />
             </Link>
           </div>
         </Card>
@@ -229,7 +229,7 @@ export const DashboardOverviewPage: React.FC = () => {
             </div>
             <div className="flex items-center justify-between p-3 rounded-xl bg-[#121212] border border-[#202020]">
               <span className="text-[#9B9B9B]">{isAr ? 'نظام الحماية (RLS)' : 'RLS Security'}</span>
-              <span className="text-purple-400 font-semibold">{isAr ? 'مفعّل بالكامل' : 'Enabled'}</span>
+              <span className="text-emerald-400 font-semibold">{isAr ? 'مفعّل بالكامل' : 'Enabled'}</span>
             </div>
           </div>
         </Card>

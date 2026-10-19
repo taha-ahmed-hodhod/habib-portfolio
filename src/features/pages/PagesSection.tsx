@@ -53,7 +53,7 @@ export const PagesSection: React.FC = () => {
   return (
     <section id="pages" className="py-24 relative overflow-hidden bg-transparent border-t border-[#141414]/60">
       {/* Background ambient light */}
-      <div className="absolute top-1/2 right-10 w-96 h-96 bg-[#8B5CF6]/10 rounded-full blur-[120px] pointer-events-none -z-10" />
+      <div className="absolute top-1/2 right-10 w-96 h-96 bg-[#B51D19]/10 rounded-full blur-[120px] pointer-events-none -z-10" />
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-16">
@@ -93,15 +93,15 @@ export const PagesSection: React.FC = () => {
                 return (
                   <div
                     key={p.id}
-                    className="relative rounded-3xl p-6 sm:p-8 bg-gradient-to-b from-[#101010] to-[#0A0A0A] border border-[#242424] hover:border-[#8B5CF6]/50 shadow-2xl transition-all duration-300 flex flex-col items-center text-center group"
+                    className="relative rounded-3xl p-6 sm:p-8 bg-gradient-to-b from-[#101010] to-[#0A0A0A] border border-[#242424] hover:border-[#B51D19]/50 shadow-2xl transition-all duration-300 flex flex-col items-center text-center group"
                   >
                     {/* Brand Avatar */}
-                    <div className="w-28 h-28 rounded-3xl overflow-hidden mb-6 p-[2px] bg-gradient-to-br from-amber-400 to-[#8B5CF6] shadow-xl">
+                    <div className="w-28 h-28 rounded-3xl overflow-hidden mb-6 p-[2px] bg-gradient-to-br from-[#B51D19] to-[#080707] shadow-xl">
                       <div className="w-full h-full bg-[#121212] rounded-[22px] flex items-center justify-center overflow-hidden">
                         {p.image_url ? (
                           <img src={p.image_url} alt={p.name_ar} loading="lazy" className="w-full h-full object-cover" />
                         ) : (
-                          <div className="w-full h-full bg-gradient-to-br from-[#1A1A1A] to-[#0D0D0D] flex items-center justify-center font-black text-2xl text-amber-400">
+                          <div className="w-full h-full bg-gradient-to-br from-[#1A1A1A] to-[#0D0D0D] flex items-center justify-center font-black text-2xl text-[#E63B32]">
                             AI
                           </div>
                         )}
@@ -115,7 +115,7 @@ export const PagesSection: React.FC = () => {
 
                     {/* Subtitle */}
                     {(p.specialization_ar || p.specialization_en) && (
-                      <p className="text-xs font-semibold text-[#8B5CF6] mb-4">
+                      <p className="text-xs font-semibold text-[#E63B32] mb-4">
                         {isAr ? p.specialization_ar : (p.specialization_en || p.specialization_ar)}
                       </p>
                     )}
@@ -137,7 +137,7 @@ export const PagesSection: React.FC = () => {
                             target="_blank"
                             rel="noreferrer"
                             title={(isAr ? link.label_ar : link.label_en) || undefined}
-                            className="w-9 h-9 rounded-xl bg-[#141414] border border-[#242424] flex items-center justify-center text-white hover:border-[#8B5CF6] hover:text-[#8B5CF6] transition-all hover:scale-105"
+                            className="w-9 h-9 rounded-xl bg-[#141414] border border-[#242424] flex items-center justify-center text-white hover:border-[#B51D19] hover:text-[#E63B32] transition-all hover:scale-105"
                           >
                             {renderPlatformIcon(link.icon || link.platform || link.label_en)}
                           </a>

@@ -55,7 +55,7 @@ export const WorkDetailPage: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-[70vh] flex items-center justify-center">
-        <div className="animate-spin w-8 h-8 border-2 border-[#8B5CF6] border-t-transparent rounded-full" />
+        <div className="animate-spin w-8 h-8 border-2 border-[#B51D19] border-t-transparent rounded-full" />
       </div>
     )
   }
@@ -166,7 +166,7 @@ export const WorkDetailPage: React.FC = () => {
 
         <div className="space-y-4">
           <Card className="bg-[#0B0B0B] border-[#242424] p-6 space-y-4">
-            <h3 className="text-xs font-bold text-[#8B5CF6] uppercase tracking-wider">
+            <h3 className="text-xs font-bold text-[#E63B32] uppercase tracking-wider">
               {isAr ? 'معلومات المشروع' : 'Project Details'}
             </h3>
 

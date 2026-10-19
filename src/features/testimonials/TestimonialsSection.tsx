@@ -81,7 +81,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
             <Button
               variant="outline"
               size="md"
-              icon={<Plus className="w-4 h-4 text-[#8B5CF6]" />}
+              icon={<Plus className="w-4 h-4 text-[#E63B32]" />}
               onClick={() => setModalOpen(true)}
               className="shrink-0"
             >
@@ -94,7 +94,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
           {testimonials.map((tItem) => (
             <div
               key={tItem.id}
-              className="p-6 rounded-2xl bg-[#0B0B0B] border border-[#242424] hover:border-[#8B5CF6]/30 transition-all duration-300 flex flex-col justify-between"
+              className="p-6 rounded-2xl bg-[#0B0B0B] border border-[#242424] hover:border-[#B51D19]/30 transition-all duration-300 flex flex-col justify-between"
             >
               <div>
                 <div className="flex items-center gap-1 text-amber-400 mb-4">
@@ -116,7 +116,7 @@ export const TestimonialsSection: React.FC<TestimonialsSectionProps> = ({
                     className="w-10 h-10 rounded-full object-cover border border-[#2E2E2E]"
                   />
                 ) : (
-                  <div className="w-10 h-10 rounded-full bg-[#161616] border border-[#2E2E2E] flex items-center justify-center font-bold text-xs text-[#A78BFA]">
+                  <div className="w-10 h-10 rounded-full bg-[#161616] border border-[#2E2E2E] flex items-center justify-center font-bold text-xs text-[#E63B32]">
                     {(isAr ? tItem.client_name_ar : tItem.client_name_en).charAt(0)}
                   </div>
                 )}

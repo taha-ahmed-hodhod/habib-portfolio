@@ -162,7 +162,7 @@ export const ClientsManagerPage: React.FC = () => {
             <Card key={client.id} className="bg-[#0B0B0B] border-[#242424] p-5 flex flex-col justify-between">
               <div>
                 <div className="flex items-start justify-between mb-3">
-                  <div className="w-12 h-12 rounded-xl bg-[#151515] border border-[#242424] flex items-center justify-center overflow-hidden text-[#8B5CF6]">
+                  <div className="w-12 h-12 rounded-xl bg-[#151515] border border-[#242424] flex items-center justify-center overflow-hidden text-[#E63B32]">
                     {client.logo_url ? (
                       <img src={client.logo_url} alt={client.name_ar} className="w-full h-full object-contain p-1" />
                     ) : (
@@ -181,7 +181,7 @@ export const ClientsManagerPage: React.FC = () => {
                   {isAr ? client.profession_ar : client.profession_en}
                 </p>
                 {(client.work_description_ar || client.work_description_en) && (
-                  <p className="text-xs text-[#8B5CF6]/90 mt-2.5 bg-[#8B5CF6]/5 px-2.5 py-1.5 rounded-lg border border-[#8B5CF6]/20 line-clamp-2">
+                  <p className="text-xs text-[#E63B32] mt-2.5 bg-[#B51D19]/10 px-2.5 py-1.5 rounded-lg border border-[#B51D19]/25 line-clamp-2">
                     <span className="font-medium text-[#F5F5F5]">{isAr ? 'الأعمال: ' : 'Delivered: '}</span>
                     {isAr ? (client.work_description_ar || client.work_description_en) : (client.work_description_en || client.work_description_ar)}
                   </p>
@@ -243,7 +243,7 @@ export const ClientsManagerPage: React.FC = () => {
                   required
                   value={editingClient.name_ar || ''}
                   onChange={(e) => setEditingClient({ ...editingClient, name_ar: e.target.value })}
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#B51D19]"
                 />
               </div>
 
@@ -256,7 +256,7 @@ export const ClientsManagerPage: React.FC = () => {
                   required
                   value={editingClient.name_en || ''}
                   onChange={(e) => setEditingClient({ ...editingClient, name_en: e.target.value })}
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#B51D19]"
                 />
               </div>
 
@@ -268,7 +268,7 @@ export const ClientsManagerPage: React.FC = () => {
                   type="text"
                   value={editingClient.profession_ar || ''}
                   onChange={(e) => setEditingClient({ ...editingClient, profession_ar: e.target.value })}
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#B51D19]"
                 />
               </div>
 
@@ -280,7 +280,7 @@ export const ClientsManagerPage: React.FC = () => {
                   type="text"
                   value={editingClient.profession_en || ''}
                   onChange={(e) => setEditingClient({ ...editingClient, profession_en: e.target.value })}
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#B51D19]"
                 />
               </div>
 
@@ -293,7 +293,7 @@ export const ClientsManagerPage: React.FC = () => {
                   value={editingClient.work_description_ar || ''}
                   onChange={(e) => setEditingClient({ ...editingClient, work_description_ar: e.target.value })}
                   placeholder={isAr ? 'مثال: إدارة حملات تسويقية، صناعة فيديو بالذكاء الاصطناعي...' : 'e.g. Social Media Management, AI Video Production...'}
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#8B5CF6] resize-none"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#B51D19] resize-none"
                 />
               </div>
 
@@ -306,7 +306,7 @@ export const ClientsManagerPage: React.FC = () => {
                   value={editingClient.work_description_en || ''}
                   onChange={(e) => setEditingClient({ ...editingClient, work_description_en: e.target.value })}
                   placeholder="e.g. Social Media Management, AI Video Production..."
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#8B5CF6] resize-none"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-[#F5F5F5] focus:outline-none focus:border-[#B51D19] resize-none"
                 />
               </div>
 
@@ -316,7 +316,7 @@ export const ClientsManagerPage: React.FC = () => {
                   id="clientVisible"
                   checked={editingClient.is_visible ?? true}
                   onChange={(e) => setEditingClient({ ...editingClient, is_visible: e.target.checked })}
-                  className="rounded border-[#303030] text-[#8B5CF6] focus:ring-[#8B5CF6]"
+                  className="rounded border-[#303030] text-[#B51D19] focus:ring-[#B51D19] accent-[#B51D19]"
                 />
                 <label htmlFor="clientVisible" className="text-xs text-[#D1D1D1]">
                   {isAr ? 'إظهار هذا العميل في الموقع العام' : 'Show on public website'}

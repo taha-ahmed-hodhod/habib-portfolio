@@ -86,12 +86,12 @@ export const GlobalInitialLoader: React.FC<GlobalInitialLoaderProps> = ({ onComp
       }`}
     >
       {/* Subtle ambient lighting */}
-      <div className="absolute w-96 h-96 rounded-full bg-gradient-to-tr from-red-600/15 via-red-900/5 to-red-950/10 blur-[130px] pointer-events-none" />
+      <div className="absolute w-96 h-96 rounded-full bg-gradient-to-tr from-[#B51D19]/15 via-[#B51D19]/5 to-[#080707]/10 blur-[130px] pointer-events-none" />
 
       <div className="relative z-10 flex flex-col items-center text-center px-4 max-w-md w-full">
         {/* Animated Brand Emblem */}
         <div className="relative mb-6">
-          <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-red-600 via-red-800 to-red-950 opacity-75 blur-sm animate-pulse" />
+          <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#B51D19] to-[#080707] opacity-75 blur-sm animate-pulse" />
           <div className="relative w-16 h-16 rounded-2xl bg-[#0B0B0B] border border-[#242424] flex items-center justify-center shadow-2xl">
             <span className="text-xl font-black gradient-name">
               HR
@@ -104,7 +104,7 @@ export const GlobalInitialLoader: React.FC<GlobalInitialLoaderProps> = ({ onComp
           <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-[#F5F5F5] font-sans">
             {displayedText}
             {displayedText.length < profileName.length && (
-              <span className="inline-block w-0.5 h-6 ml-1 bg-[#8B5CF6] animate-pulse align-middle" />
+              <span className="inline-block w-0.5 h-6 ml-1 bg-[#E63B32] animate-pulse align-middle" />
             )}
           </h1>
         </div>
@@ -119,7 +119,7 @@ export const GlobalInitialLoader: React.FC<GlobalInitialLoaderProps> = ({ onComp
           {/* Thin Progress Bar */}
           <div className="h-1 w-full bg-[#151515] rounded-full overflow-hidden border border-[#202020]">
             <div
-              className="h-full bg-gradient-to-r from-red-500 via-red-700 to-red-950 rounded-full transition-all duration-75 ease-linear"
+              className="h-full bg-gradient-to-r from-[#B51D19] to-[#E63B32] rounded-full transition-all duration-75 ease-linear"
               style={{ width: `${progress}%` }}
             />
           </div>
@@ -127,7 +127,7 @@ export const GlobalInitialLoader: React.FC<GlobalInitialLoaderProps> = ({ onComp
           {/* Progress Percentage Display */}
           <div className="flex items-center justify-between text-[11px] font-mono text-[#7A7A7A] px-0.5">
             <span className="tracking-widest uppercase text-[10px] text-[#555]">Initializing</span>
-            <span className="font-semibold text-[#A78BFA]">{progress}%</span>
+            <span className="font-semibold text-[#E63B32]">{progress}%</span>
           </div>
         </div>
       </div>

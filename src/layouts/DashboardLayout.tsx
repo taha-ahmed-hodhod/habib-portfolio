@@ -59,27 +59,26 @@ export const DashboardLayout: React.FC = () => {
 
       {/* Sidebar Navigation */}
       <aside
-        className={`fixed top-0 bottom-0 z-50 w-64 bg-[#0B0B0B] border-r border-[#242424] flex flex-col transition-transform duration-300 lg:translate-x-0 ${
-          isAr
+        className={`fixed top-0 bottom-0 z-50 w-64 bg-[#0B0B0B] border-r border-[#242424] flex flex-col transition-transform duration-300 lg:translate-x-0 ${isAr
             ? sidebarOpen
               ? 'translate-x-0 right-0 border-l border-r-0'
               : 'translate-x-full right-0 lg:translate-x-0 border-l border-r-0'
             : sidebarOpen
-            ? 'translate-x-0 left-0'
-            : '-translate-x-full left-0 lg:translate-x-0'
-        }`}
+              ? 'translate-x-0 left-0'
+              : '-translate-x-full left-0 lg:translate-x-0'
+          }`}
       >
         {/* Sidebar Header */}
         <div className="h-20 px-6 flex items-center justify-between border-b border-[#1A1A1A]">
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#8B5CF6] to-[#38BDF8] p-[1px]">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#B51D19] to-[#080707] p-[1px]">
               <div className="w-full h-full bg-[#0E0E0E] rounded-[11px] flex items-center justify-center font-bold text-white text-sm">
                 H
               </div>
             </div>
             <div>
               <span className="font-bold text-sm text-[#F5F5F5] block">Habib Portfolio</span>
-              <span className="text-[10px] text-[#8B5CF6] font-medium tracking-wide">CMS DASHBOARD</span>
+              <span className="text-[10px] text-[#E63B32] font-medium tracking-wide">CMS DASHBOARD</span>
             </div>
           </Link>
 
@@ -100,10 +99,9 @@ export const DashboardLayout: React.FC = () => {
               end
               onClick={() => setSidebarOpen(false)}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${
-                  isActive
-                    ? 'bg-[#8B5CF6]/15 text-[#A78BFA] border border-[#8B5CF6]/30 shadow-sm'
-                    : 'text-[#9B9B9B] hover:text-[#F5F5F5] hover:bg-[#141414]'
+                `flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-sm font-medium transition-all duration-200 ${isActive
+                  ? 'bg-[#B51D19]/15 text-[#E63B32] border border-[#B51D19]/30 shadow-sm'
+                  : 'text-[#9B9B9B] hover:text-[#F5F5F5] hover:bg-[#141414]'
                 }`
               }
             >
@@ -121,7 +119,7 @@ export const DashboardLayout: React.FC = () => {
             className="flex items-center justify-between px-3.5 py-2 rounded-xl text-xs text-[#9B9B9B] hover:text-[#F5F5F5] hover:bg-[#141414] transition-colors"
           >
             <span className="flex items-center gap-2">
-              <ExternalLink className="w-3.5 h-3.5 text-[#8B5CF6]" />
+              <ExternalLink className="w-3.5 h-3.5 text-[#E63B32]" />
               {isAr ? 'عرض الموقع العام' : 'View Public Site'}
             </span>
           </Link>
@@ -157,7 +155,7 @@ export const DashboardLayout: React.FC = () => {
               onClick={toggleLanguage}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#242424] bg-[#0E0E0E] hover:bg-[#181818] text-xs font-semibold text-[#9B9B9B] hover:text-white transition-all"
             >
-              <Globe className="w-3.5 h-3.5 text-[#8B5CF6]" />
+              <Globe className="w-3.5 h-3.5 text-[#E63B32]" />
               <span>{isAr ? 'English' : 'العربية'}</span>
             </button>
 
@@ -166,7 +164,7 @@ export const DashboardLayout: React.FC = () => {
               title={isAr ? 'أمان الحساب وتغيير كلمة المرور' : 'Account Security & Password'}
               className="flex items-center gap-2.5 pl-2 border-l border-[#242424] hover:opacity-80 transition-opacity"
             >
-              <div className="w-8 h-8 rounded-full bg-[#181818] border border-[#303030] flex items-center justify-center text-xs font-bold text-[#A78BFA]">
+              <div className="w-8 h-8 rounded-full bg-[#181818] border border-[#303030] flex items-center justify-center text-xs font-bold text-[#E63B32]">
                 H
               </div>
               <span className="text-xs font-medium text-[#D1D1D1] hidden sm:block">

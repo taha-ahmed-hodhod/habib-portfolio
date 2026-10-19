@@ -4,13 +4,13 @@
   --color-bg-main: #050505;
   --color-surface-1: #0B0B0B;
   --color-surface-2: #101010;
-  --color-surface-3: #151515;
-  --color-border-main: #242424;
-  --color-border-light: #303030;
+  --color-surface-3: #151010;
+  --color-border-main: #242020;
+  --color-border-light: #383030;
   --color-text-main: #F5F5F5;
-  --color-text-muted: #9B9B9B;
-  --color-accent-primary: #8B5CF6;
-  --color-accent-secondary: #A78BFA;
+  --color-text-muted: #A39A9A;
+  --color-accent-primary: #B51D19;
+  --color-accent-secondary: #E63B32;
 
   --font-sans: "Plus Jakarta Sans", "Cairo", system-ui, -apple-system, sans-serif;
   --font-arabic: "Cairo", "Plus Jakarta Sans", system-ui, -apple-system, sans-serif;
@@ -43,13 +43,16 @@
     width: 8px;
     height: 8px;
   }
+
   ::-webkit-scrollbar-track {
     background: #050505;
   }
+
   ::-webkit-scrollbar-thumb {
     background: #242424;
     border-radius: 4px;
   }
+
   ::-webkit-scrollbar-thumb:hover {
     background: #303030;
   }
@@ -59,83 +62,71 @@
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
+
 .no-scrollbar {
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
 
-/* ── Red-to-Black Animated Gradient Name ── */
-@keyframes gradient-shift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
+/* ── Red-and-Black Animated Gradient (Right to Left) ── */
+@keyframes gradient-r2l {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  100% {
+    background-position: 200% 50%;
+  }
 }
 
 .gradient-name {
-  background: linear-gradient(
-    90deg,
-    #DC2626 0%,
-    #EF4444 18%,
-    #F87171 32%,
-    #DC2626 50%,
-    #991B1B 68%,
-    #450A0A 85%,
-    #DC2626 100%
-  );
+  display: inline-block;
+  background: linear-gradient(90deg,
+      #660C03 0%,
+      #98422B 25%,
+      #DB5B4C 48%,
+      #DF9A59 72%,
+      #660C03 100%);
   background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
+  -webkit-text-fill-color: transparent;
   color: transparent;
-  animation: gradient-shift 4s ease-in-out infinite;
+  will-change: background-position;
+  animation: gradient-r2l 3s linear infinite !important;
 }
 
-/* ── Hero Profile Image: Animated Spinning Border ── */
-@keyframes border-spin {
-  from { --border-angle: 0deg; }
-  to { --border-angle: 360deg; }
-}
-
-@property --border-angle {
-  syntax: '<angle>';
-  initial-value: 0deg;
-  inherits: false;
-}
-
+/* ── Hero Profile Image: Animated Red-to-Black Border & Glow (Right to Left) ── */
 .hero-border-animated {
-  background: conic-gradient(
-    from var(--border-angle),
-    #DC2626 0%,
-    #EF4444 15%,
-    #991B1B 35%,
-    #450A0A 50%,
-    #0A0A0A 65%,
-    #450A0A 75%,
-    #991B1B 85%,
-    #DC2626 100%
-  );
-  animation: border-spin 4s linear infinite;
+  background: linear-gradient(90deg,
+      #660C03 0%,
+      #98422B 25%,
+      #DB5B4C 48%,
+      #DF9A59 72%,
+      #660C03 100%);
+  background-size: 200% 100%;
+  will-change: background-position;
+  animation: gradient-r2l 3s linear infinite !important;
 }
 
 .hero-glow-animated {
-  background: conic-gradient(
-    from var(--border-angle),
-    #DC2626 0%,
-    #EF4444 25%,
-    #991B1B 50%,
-    #450A0A 75%,
-    #DC2626 100%
-  );
-  animation: border-spin 4s linear infinite;
+  background: linear-gradient(90deg,
+      #660C03 0%,
+      #98422B 25%,
+      #DB5B4C 48%,
+      #DF9A59 72%,
+      #660C03 100%);
+  background-size: 200% 100%;
+  will-change: background-position;
+  animation: gradient-r2l 3s linear infinite !important;
 }
 
-/* ── Reduced Motion ── */
+/* ── Reduced Motion (Gentle Slowdown instead of stopping completely) ── */
 @media (prefers-reduced-motion: reduce) {
-  .gradient-name {
-    animation: none;
-    background-position: 0% 50%;
-  }
+
+  .gradient-name,
   .hero-border-animated,
   .hero-glow-animated {
-    animation: none;
+    animation-duration: 8s !important;
   }
 }

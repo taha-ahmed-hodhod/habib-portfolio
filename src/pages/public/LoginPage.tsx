@@ -52,12 +52,12 @@ export const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-transparent flex items-center justify-center p-4 relative overflow-hidden">
-      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#8B5CF6]/10 rounded-full blur-3xl pointer-events-none" />
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-[#B51D19]/10 rounded-full blur-3xl pointer-events-none" />
 
       <div className="w-full max-w-md relative z-10">
         <div className="text-center mb-8">
           <Link to="/" className="inline-flex items-center gap-2 mb-4">
-            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#8B5CF6] to-[#38BDF8] p-[1.5px]">
+            <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#B51D19] to-[#080707] p-[1.5px]">
               <div className="w-full h-full bg-[#0B0B0B] rounded-[10px] flex items-center justify-center font-bold text-lg text-white">
                 H
               </div>
@@ -93,7 +93,7 @@ export const LoginPage: React.FC = () => {
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="admin@habibalrahman.com"
-                  className="w-full bg-[#121212] border border-[#262626] focus:border-[#8B5CF6] rounded-xl px-4 py-3 pl-11 text-sm text-[#F5F5F5] placeholder-[#555] focus:outline-none transition-colors"
+                  className="w-full bg-[#121212] border border-[#262626] focus:border-[#B51D19] rounded-xl px-4 py-3 pl-11 text-sm text-[#F5F5F5] placeholder-[#555] focus:outline-none transition-colors"
                 />
                 <Mail className="w-4 h-4 text-[#777] absolute left-4 top-1/2 -translate-y-1/2" />
               </div>
@@ -110,7 +110,7 @@ export const LoginPage: React.FC = () => {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="••••••••••••"
-                  className="w-full bg-[#121212] border border-[#262626] focus:border-[#8B5CF6] rounded-xl px-4 py-3 pl-11 text-sm text-[#F5F5F5] placeholder-[#555] focus:outline-none transition-colors"
+                  className="w-full bg-[#121212] border border-[#262626] focus:border-[#B51D19] rounded-xl px-4 py-3 pl-11 text-sm text-[#F5F5F5] placeholder-[#555] focus:outline-none transition-colors"
                 />
                 <Lock className="w-4 h-4 text-[#777] absolute left-4 top-1/2 -translate-y-1/2" />
               </div>
@@ -129,7 +129,7 @@ export const LoginPage: React.FC = () => {
           </form>
 
           <div className="mt-6 pt-6 border-t border-[#1C1C1C] flex items-center justify-center gap-2 text-xs text-[#707070]">
-            <ShieldCheck className="w-4 h-4 text-[#8B5CF6]" />
+            <ShieldCheck className="w-4 h-4 text-[#E63B32]" />
             <span>{isAr ? 'مؤمّن بواسطة Supabase Auth' : 'Secured by Supabase Auth'}</span>
           </div>
         </Card>

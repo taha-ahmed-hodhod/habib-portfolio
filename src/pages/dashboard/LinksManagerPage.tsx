@@ -185,7 +185,7 @@ export const LinksManagerPage: React.FC = () => {
             <Card key={link.id} className="bg-[#0B0B0B] border-[#242424] p-4 flex flex-col justify-between">
               <div className="flex items-start justify-between">
                 <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 rounded-xl bg-[#151515] border border-[#242424] flex items-center justify-center text-[#8B5CF6]">
+                  <div className="w-9 h-9 rounded-xl bg-[#151515] border border-[#242424] flex items-center justify-center text-[#E63B32]">
                     {renderPlatformIcon(link.icon || link.platform || link.label_en)}
                   </div>
                   <div>
@@ -225,7 +225,7 @@ export const LinksManagerPage: React.FC = () => {
 
               {/* Badges for placements */}
               <div className="flex items-center gap-1.5 mt-3 pt-2.5 border-t border-[#1C1C1C]">
-                <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${link.show_in_hero !== false ? 'bg-[#8B5CF6]/20 text-[#A78BFA] border border-[#8B5CF6]/30' : 'bg-[#181818] text-[#666]'}`}>
+                <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${link.show_in_hero !== false ? 'bg-[#B51D19]/20 text-[#E63B32] border border-[#B51D19]/30' : 'bg-[#181818] text-[#666]'}`}>
                   {isAr ? 'الهيرو' : 'Hero'}
                 </span>
                 <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${link.show_in_footer !== false ? 'bg-[#38BDF8]/20 text-[#38BDF8] border border-[#38BDF8]/30' : 'bg-[#181818] text-[#666]'}`}>
@@ -280,7 +280,7 @@ export const LinksManagerPage: React.FC = () => {
                         url: isWhatsApp ? 'https://wa.me/201007430812' : (isDefaultOrEmpty ? (platObj?.defaultUrl || 'https://') : editingLink.url),
                       })
                     }}
-                    className="bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                    className="bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                   >
                     {COMMON_PLATFORMS.map((p) => (
                       <option key={p.name} value={p.name}>
@@ -305,7 +305,7 @@ export const LinksManagerPage: React.FC = () => {
                       })
                     }}
                     placeholder="Platform name"
-                    className="flex-1 bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                    className="flex-1 bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                   />
                 </div>
               </div>
@@ -317,7 +317,7 @@ export const LinksManagerPage: React.FC = () => {
                     type="text"
                     value={editingLink.label_ar || ''}
                     onChange={(e) => setEditingLink({ ...editingLink, label_ar: e.target.value })}
-                    className="w-full bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                    className="w-full bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                   />
                 </div>
                 <div>
@@ -326,7 +326,7 @@ export const LinksManagerPage: React.FC = () => {
                     type="text"
                     value={editingLink.label_en || ''}
                     onChange={(e) => setEditingLink({ ...editingLink, label_en: e.target.value })}
-                    className="w-full bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                    className="w-full bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                   />
                 </div>
               </div>
@@ -335,7 +335,7 @@ export const LinksManagerPage: React.FC = () => {
                 <div className="flex items-center justify-between mb-1">
                   <label className="block text-xs text-[#B3B3B3]">{isAr ? 'الرابط (URL)' : 'URL'}</label>
                   {editingLink.platform?.toLowerCase().includes('whatsapp') && (
-                    <span className="text-[10px] text-[#A78BFA] bg-[#8B5CF6]/10 px-2 py-0.5 rounded-md border border-[#8B5CF6]/20">
+                    <span className="text-[10px] text-[#E63B32] bg-[#B51D19]/10 px-2 py-0.5 rounded-md border border-[#B51D19]/20">
                       {isAr ? 'مجهز برقم حبيب تلقائياً (يمكنك تعديله)' : 'Pre-filled with Habib’s number (editable)'}
                     </span>
                   )}
@@ -346,13 +346,13 @@ export const LinksManagerPage: React.FC = () => {
                   value={editingLink.url || ''}
                   onChange={(e) => setEditingLink({ ...editingLink, url: e.target.value })}
                   placeholder="https://..."
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                 />
               </div>
 
               {/* Placement & Visibility Checkboxes */}
               <div className="space-y-2 pt-1 border-t border-[#1F1F1F]">
-                <label className="text-xs font-semibold text-[#8B5CF6] block">
+                <label className="text-xs font-semibold text-[#E63B32] block">
                   {isAr ? 'أماكن الظهور (Placements)' : 'Placements & Visibility'}
                 </label>
 
@@ -362,7 +362,7 @@ export const LinksManagerPage: React.FC = () => {
                     id="showInHero"
                     checked={editingLink.show_in_hero ?? true}
                     onChange={(e) => setEditingLink({ ...editingLink, show_in_hero: e.target.checked })}
-                    className="rounded border-[#303030] text-[#8B5CF6] focus:ring-[#8B5CF6]"
+                    className="rounded border-[#303030] text-[#B51D19] focus:ring-[#B51D19] accent-[#B51D19]"
                   />
                   <label htmlFor="showInHero" className="text-xs text-[#D1D1D1]">
                     {isAr ? 'إظهار في قسم البداية (Hero Section)' : 'Show in Hero section'}
@@ -375,7 +375,7 @@ export const LinksManagerPage: React.FC = () => {
                     id="showInFooter"
                     checked={editingLink.show_in_footer ?? true}
                     onChange={(e) => setEditingLink({ ...editingLink, show_in_footer: e.target.checked })}
-                    className="rounded border-[#303030] text-[#8B5CF6] focus:ring-[#8B5CF6]"
+                    className="rounded border-[#303030] text-[#B51D19] focus:ring-[#B51D19] accent-[#B51D19]"
                   />
                   <label htmlFor="showInFooter" className="text-xs text-[#D1D1D1]">
                     {isAr ? 'إظهار في أسفل الصفحة (Footer)' : 'Show in Footer'}
@@ -388,7 +388,7 @@ export const LinksManagerPage: React.FC = () => {
                     id="linkVisible"
                     checked={editingLink.is_visible ?? true}
                     onChange={(e) => setEditingLink({ ...editingLink, is_visible: e.target.checked })}
-                    className="rounded border-[#303030] text-[#8B5CF6] focus:ring-[#8B5CF6]"
+                    className="rounded border-[#303030] text-[#B51D19] focus:ring-[#B51D19] accent-[#B51D19]"
                   />
                   <label htmlFor="linkVisible" className="text-xs text-[#D1D1D1]">
                     {isAr ? 'مفعل وظاهر في الموقع' : 'Active and visible'}

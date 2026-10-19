@@ -111,7 +111,7 @@ export const CategoriesManagerPage: React.FC = () => {
           {categories.map((c) => (
             <Card key={c.id} className="bg-[#0B0B0B] border-[#242424] p-5 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-[#151515] border border-[#242424] flex items-center justify-center text-[#8B5CF6]">
+                <div className="w-9 h-9 rounded-xl bg-[#151515] border border-[#242424] flex items-center justify-center text-[#E63B32]">
                   <FolderTree className="w-4 h-4" />
                 </div>
                 <div>
@@ -165,7 +165,7 @@ export const CategoriesManagerPage: React.FC = () => {
                   required
                   value={editingCat.name_ar || ''}
                   onChange={(e) => setEditingCat({ ...editingCat, name_ar: e.target.value })}
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                 />
               </div>
 
@@ -176,7 +176,7 @@ export const CategoriesManagerPage: React.FC = () => {
                   required
                   value={editingCat.name_en || ''}
                   onChange={(e) => setEditingCat({ ...editingCat, name_en: e.target.value })}
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                 />
               </div>
 

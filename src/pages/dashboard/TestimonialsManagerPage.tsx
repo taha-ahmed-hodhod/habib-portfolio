@@ -269,7 +269,7 @@ export const TestimonialsManagerPage: React.FC = () => {
                   required
                   value={editingItem.client_name_ar || ''}
                   onChange={(e) => setEditingItem({ ...editingItem, client_name_ar: e.target.value })}
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                 />
               </div>
 
@@ -279,7 +279,7 @@ export const TestimonialsManagerPage: React.FC = () => {
                   type="text"
                   value={editingItem.profession_ar || ''}
                   onChange={(e) => setEditingItem({ ...editingItem, profession_ar: e.target.value })}
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                 />
               </div>
 
@@ -299,7 +299,7 @@ export const TestimonialsManagerPage: React.FC = () => {
                   required
                   value={editingItem.content_ar || ''}
                   onChange={(e) => setEditingItem({ ...editingItem, content_ar: e.target.value })}
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                 />
               </div>
 

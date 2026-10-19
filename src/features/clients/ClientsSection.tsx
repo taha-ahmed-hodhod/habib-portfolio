@@ -69,11 +69,11 @@ export const ClientsSection: React.FC = () => {
             {clients.map((c) => (
               <div
                 key={c.id}
-                className="p-6 rounded-2xl bg-[#0B0B0B] border border-[#242424] hover:border-[#8B5CF6]/40 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/60 group"
+                className="p-6 rounded-2xl bg-[#0B0B0B] border border-[#242424] hover:border-[#B51D19]/40 transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/60 group"
               >
                 <div>
                   <div className="flex items-center gap-3.5 mb-4">
-                    <div className="w-12 h-12 rounded-xl bg-[#141414] border border-[#262626] flex items-center justify-center text-[#8B5CF6] group-hover:scale-105 transition-transform overflow-hidden flex-shrink-0">
+                    <div className="w-12 h-12 rounded-xl bg-[#141414] border border-[#262626] flex items-center justify-center text-[#E63B32] group-hover:scale-105 transition-transform overflow-hidden flex-shrink-0">
                       {c.logo_url ? (
                         <img src={c.logo_url} alt={isAr ? c.name_ar : c.name_en} loading="lazy" className="w-full h-full object-cover" />
                       ) : (
@@ -84,7 +84,7 @@ export const ClientsSection: React.FC = () => {
                       <h3 className="font-bold text-base text-white">
                         {isAr ? c.name_ar : (c.name_en || c.name_ar)}
                       </h3>
-                      <span className="text-xs text-[#8B5CF6] font-medium block">
+                      <span className="text-xs text-[#E63B32] font-medium block">
                         {isAr ? c.profession_ar : (c.profession_en || c.profession_ar)}
                       </span>
                     </div>
@@ -99,7 +99,7 @@ export const ClientsSection: React.FC = () => {
                   {/* Work Done with Client */}
                   {((isAr ? c.work_description_ar || c.work_description_en : c.work_description_en || c.work_description_ar)) && (
                     <div className="mt-4 pt-3 border-t border-[#1C1C1C]">
-                      <span className="text-[11px] font-semibold text-[#A78BFA] uppercase tracking-wider block mb-1">
+                      <span className="text-[11px] font-semibold text-[#E63B32] uppercase tracking-wider block mb-1">
                         {isAr ? 'الأعمال والخدمات المنفذة' : 'What We Delivered'}
                       </span>
                       <p className="text-xs text-[#E5E5E5] leading-relaxed whitespace-pre-line">
@@ -115,7 +115,7 @@ export const ClientsSection: React.FC = () => {
                       href={c.website_url || c.project_url || '#'}
                       target="_blank"
                       rel="noreferrer"
-                      className="text-xs font-semibold text-[#8B5CF6] hover:text-[#A78BFA] flex items-center gap-1.5"
+                      className="text-xs font-semibold text-[#E63B32] hover:text-[#B51D19] flex items-center gap-1.5"
                     >
                       <span>{t('clients.view_project')}</span>
                       <ExternalLink className="w-3.5 h-3.5" />

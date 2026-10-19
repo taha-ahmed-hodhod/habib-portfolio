@@ -30,7 +30,7 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
         {/* Brand Logo */}
         <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-red-600 to-red-900 p-[1.5px] transition-transform duration-300 group-hover:scale-105 shrink-0">
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-[#B51D19] to-[#080707] p-[1.5px] transition-transform duration-300 group-hover:scale-105 shrink-0">
             <div className="w-full h-full bg-[#0B0B0B] rounded-[10px] flex items-center justify-center font-bold text-base sm:text-lg text-white">
               H
             </div>
@@ -67,12 +67,12 @@ export const Navbar: React.FC = () => {
             className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl border border-[#242424] bg-[#0E0E0E] hover:bg-[#181818] text-xs font-semibold text-[#9B9B9B] hover:text-[#F5F5F5] transition-all shrink-0"
             title="Switch Language"
           >
-            <Globe className="w-3.5 h-3.5 text-[#8B5CF6]" />
+            <Globe className="w-3.5 h-3.5 text-[#E63B32]" />
             <span>{isAr ? 'English' : 'العربية'}</span>
           </button>
 
           <Link to="/dashboard" className="shrink-0">
-            <Button variant="secondary" size="sm" icon={<ArrowUpRight className="w-3.5 h-3.5 text-[#8B5CF6]" />}>
+            <Button variant="secondary" size="sm" icon={<ArrowUpRight className="w-3.5 h-3.5 text-[#E63B32]" />}>
               {t('nav.dashboard')}
             </Button>
           </Link>
@@ -85,7 +85,7 @@ export const Navbar: React.FC = () => {
             className="flex items-center gap-1 px-2.5 py-1.5 rounded-lg border border-[#242424] bg-[#0E0E0E] text-xs font-semibold text-[#9B9B9B] hover:text-white transition-colors"
             title="Switch Language"
           >
-            <Globe className="w-3.5 h-3.5 text-[#8B5CF6]" />
+            <Globe className="w-3.5 h-3.5 text-[#E63B32]" />
             <span>{isAr ? 'EN' : 'عربي'}</span>
           </button>
 

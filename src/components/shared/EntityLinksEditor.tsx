@@ -112,7 +112,7 @@ export const EntityLinksEditor: React.FC<EntityLinksEditorProps> = ({
         <select
           value={selectedPlatform}
           onChange={(e) => setSelectedPlatform(e.target.value)}
-          className="bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#8B5CF6]"
+          className="bg-[#121212] border border-[#262626] rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-[#B51D19]"
         >
           {COMMON_PLATFORMS.map((p) => (
             <option key={p.name} value={p.name}>
@@ -126,7 +126,7 @@ export const EntityLinksEditor: React.FC<EntityLinksEditorProps> = ({
           variant="outline"
           size="sm"
           onClick={handleAddLink}
-          icon={<Plus className="w-3.5 h-3.5 text-[#8B5CF6]" />}
+          icon={<Plus className="w-3.5 h-3.5 text-[#E63B32]" />}
           className="text-xs shrink-0"
         >
           {isAr ? 'إضافة رابط' : 'Add Link'}
@@ -140,7 +140,7 @@ export const EntityLinksEditor: React.FC<EntityLinksEditorProps> = ({
             key={index}
             className="flex items-center gap-2 p-2.5 rounded-xl bg-[#121212] border border-[#242424] hover:border-[#333] transition-colors"
           >
-            <div className="w-7 h-7 rounded-lg bg-[#181818] border border-[#2B2B2B] flex items-center justify-center text-[#8B5CF6] shrink-0">
+            <div className="w-7 h-7 rounded-lg bg-[#181818] border border-[#2B2B2B] flex items-center justify-center text-[#E63B32] shrink-0">
               {renderPlatformIcon(link.icon || link.platform)}
             </div>
 
@@ -149,7 +149,7 @@ export const EntityLinksEditor: React.FC<EntityLinksEditorProps> = ({
               value={link.platform || ''}
               onChange={(e) => handleUpdateLink(index, { platform: e.target.value })}
               placeholder={isAr ? 'الاسم/المنصة' : 'Platform'}
-              className="w-24 bg-[#0A0A0A] border border-[#222] rounded-lg px-2 py-1 text-xs text-white shrink-0 focus:outline-none focus:border-[#8B5CF6]"
+              className="w-24 bg-[#0A0A0A] border border-[#222] rounded-lg px-2 py-1 text-xs text-white shrink-0 focus:outline-none focus:border-[#B51D19]"
             />
 
             <input
@@ -158,16 +158,16 @@ export const EntityLinksEditor: React.FC<EntityLinksEditorProps> = ({
               value={link.url || ''}
               onChange={(e) => handleUpdateLink(index, { url: e.target.value })}
               placeholder="https://..."
-              className="flex-1 min-w-[120px] bg-[#0A0A0A] border border-[#222] rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-[#8B5CF6]"
+              className="flex-1 min-w-[120px] bg-[#0A0A0A] border border-[#222] rounded-lg px-2.5 py-1 text-xs text-white focus:outline-none focus:border-[#B51D19]"
             />
 
             <button
               type="button"
               onClick={() => handleUpdateLink(index, { is_visible: !(link.is_visible ?? true) })}
-              title={link.is_visible ? (isAr ? 'إخفاء' : 'Hide') : (isAr ? 'إظهار' : 'Show')}
+              title={link.is_visible ? (isAr ? 'إخفاء' : 'Show') : (isAr ? 'إظهار' : 'Show')}
               className={`p-1.5 rounded-lg text-xs transition-colors shrink-0 ${
                 link.is_visible ?? true
-                  ? 'text-[#8B5CF6] hover:bg-[#8B5CF6]/10'
+                  ? 'text-[#E63B32] hover:bg-[#B51D19]/10'
                   : 'text-[#666] hover:bg-[#202020]'
               }`}
             >

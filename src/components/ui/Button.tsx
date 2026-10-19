@@ -19,19 +19,19 @@ export const Button: React.FC<ButtonProps> = ({
   ...props
 }) => {
   const baseStyles =
-    'relative inline-flex items-center justify-center font-medium transition-all duration-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#8B5CF6]/50 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]'
+    'relative inline-flex items-center justify-center font-medium transition-all duration-300 rounded-xl focus:outline-none focus:ring-2 focus:ring-[#B51D19]/50 disabled:opacity-50 disabled:cursor-not-allowed active:scale-[0.98]'
 
   const variants = {
     primary:
-      'bg-[#8B5CF6] text-white hover:bg-[#7C3AED] shadow-lg shadow-[#8B5CF6]/20 border border-[#8B5CF6]/30',
+      'bg-[#B51D19] text-white hover:bg-[#991512] shadow-lg shadow-[#B51D19]/25 border border-[#B51D19]/40',
     secondary:
       'bg-[#151515] text-[#F5F5F5] hover:bg-[#202020] border border-[#242424] hover:border-[#303030]',
     outline:
-      'bg-transparent text-[#F5F5F5] border border-[#303030] hover:border-[#8B5CF6] hover:bg-[#8B5CF6]/10',
+      'bg-transparent text-[#F5F5F5] border border-[#303030] hover:border-[#B51D19] hover:bg-[#B51D19]/10',
     ghost:
       'bg-transparent text-[#9B9B9B] hover:text-[#F5F5F5] hover:bg-[#151515]',
     gradient:
-      'bg-gradient-to-r from-[#38BDF8] via-[#818CF8] to-[#C084FC] text-white hover:opacity-95 shadow-lg shadow-[#818CF8]/25 font-semibold',
+      'bg-gradient-to-r from-[#B51D19] via-[#D32F2F] to-[#E63B32] text-white hover:opacity-95 shadow-lg shadow-[#B51D19]/25 font-semibold',
     danger:
       'bg-red-500/10 text-red-400 border border-red-500/20 hover:bg-red-500/20',
   }

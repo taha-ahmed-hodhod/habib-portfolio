@@ -47,7 +47,7 @@ export const Footer: React.FC = () => {
                     rel="noopener noreferrer"
                     aria-label={link.platform}
                     title={isAr ? link.label_ar || link.platform : link.label_en || link.platform}
-                    className="w-10 h-10 rounded-xl bg-[#0F0F0F] border border-[#242424] flex items-center justify-center text-[#9B9B9B] hover:text-[#A78BFA] hover:border-[#8B5CF6]/40 hover:bg-[#8B5CF6]/10 transition-all duration-300"
+                    className="w-10 h-10 rounded-xl bg-[#0F0F0F] border border-[#242424] flex items-center justify-center text-[#9B9B9B] hover:text-[#E63B32] hover:border-[#B51D19]/40 hover:bg-[#B51D19]/10 transition-all duration-300"
                   >
                     {renderPlatformIcon(link.icon || link.platform)}
                   </a>
@@ -60,17 +60,17 @@ export const Footer: React.FC = () => {
               <a
                 href="tel:+201007430812"
                 dir="ltr"
-                className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#0F0F0F]/80 border border-[#242424]/80 text-[#B3B3B3] hover:text-white hover:border-[#8B5CF6]/40 hover:bg-[#8B5CF6]/10 transition-all duration-300 group"
+                className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#0F0F0F]/80 border border-[#242424]/80 text-[#B3B3B3] hover:text-white hover:border-[#B51D19]/40 hover:bg-[#B51D19]/10 transition-all duration-300 group"
               >
-                <Phone className="w-3.5 h-3.5 text-[#8B5CF6] group-hover:scale-110 transition-transform shrink-0" />
+                <Phone className="w-3.5 h-3.5 text-[#E63B32] group-hover:scale-110 transition-transform shrink-0" />
                 <span className="font-medium tracking-wide" dir="ltr">+20 10 07430812</span>
               </a>
 
               <a
                 href="mailto:hb202065@gmail.com"
-                className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#0F0F0F]/80 border border-[#242424]/80 text-[#B3B3B3] hover:text-white hover:border-[#8B5CF6]/40 hover:bg-[#8B5CF6]/10 transition-all duration-300 group"
+                className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#0F0F0F]/80 border border-[#242424]/80 text-[#B3B3B3] hover:text-white hover:border-[#B51D19]/40 hover:bg-[#B51D19]/10 transition-all duration-300 group"
               >
-                <Mail className="w-3.5 h-3.5 text-[#8B5CF6] group-hover:scale-110 transition-transform shrink-0" />
+                <Mail className="w-3.5 h-3.5 text-[#E63B32] group-hover:scale-110 transition-transform shrink-0" />
                 <span className="font-medium">hb202065@gmail.com</span>
               </a>
             </div>
@@ -89,7 +89,7 @@ export const Footer: React.FC = () => {
               href="https://my-portfolio-two-gamma-xa2fur93st.vercel.app/#/"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-[#A78BFA] hover:text-[#8B5CF6] hover:underline font-semibold transition-colors"
+              className="text-[#E63B32] hover:text-[#B51D19] hover:underline font-semibold transition-colors"
             >
               Taha Ahmed
             </a>

@@ -100,7 +100,7 @@ export const SubmitReviewModal: React.FC<SubmitReviewModalProps> = ({
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="أحمد محمد"
-                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#B51D19]"
               />
             </div>
 
@@ -113,7 +113,7 @@ export const SubmitReviewModal: React.FC<SubmitReviewModalProps> = ({
                 value={profession}
                 onChange={(e) => setProfession(e.target.value)}
                 placeholder="مدير تسويق في شركة..."
-                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#B51D19]"
               />
             </div>
 
@@ -149,7 +149,7 @@ export const SubmitReviewModal: React.FC<SubmitReviewModalProps> = ({
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 placeholder={isAr ? 'اكتب رأيك هنا...' : 'Write your thoughts here...'}
-                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#B51D19]"
               />
             </div>
 

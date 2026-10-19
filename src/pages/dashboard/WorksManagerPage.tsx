@@ -297,7 +297,7 @@ export const WorksManagerPage: React.FC = () => {
                   {isAr ? w.title_ar : w.title_en}
                 </h4>
                 {w.client && (
-                  <span className="text-[11px] text-[#8B5CF6] block mt-0.5">
+                  <span className="text-[11px] text-[#E63B32] block mt-0.5">
                     {isAr ? w.client.name_ar : w.client.name_en}
                   </span>
                 )}
@@ -362,7 +362,7 @@ export const WorksManagerPage: React.FC = () => {
                   required
                   value={editingWork.title_ar || ''}
                   onChange={(e) => setEditingWork({ ...editingWork, title_ar: e.target.value })}
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                 />
               </div>
 
@@ -374,7 +374,7 @@ export const WorksManagerPage: React.FC = () => {
                   type="text"
                   value={editingWork.title_en || ''}
                   onChange={(e) => setEditingWork({ ...editingWork, title_en: e.target.value })}
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                 />
               </div>
 
@@ -386,7 +386,7 @@ export const WorksManagerPage: React.FC = () => {
                   <select
                     value={editingWork.media_type || 'video'}
                     onChange={(e) => setEditingWork({ ...editingWork, media_type: e.target.value as 'image' | 'video' | 'document' })}
-                    className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                    className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                   >
                     <option value="video">{isAr ? 'فيديو سينمائي' : 'Video'}</option>
                     <option value="image">{isAr ? 'صورة / تصميم' : 'Image'}</option>
@@ -401,7 +401,7 @@ export const WorksManagerPage: React.FC = () => {
                   <select
                     value={editingWork.category_id || ''}
                     onChange={(e) => setEditingWork({ ...editingWork, category_id: e.target.value || null })}
-                    className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                    className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                   >
                     <option value="">{isAr ? 'بدون تصنيف' : 'Uncategorized'}</option>
                     {categories.map((c) => (
@@ -420,7 +420,7 @@ export const WorksManagerPage: React.FC = () => {
                 <select
                   value={editingWork.client_id || ''}
                   onChange={(e) => setEditingWork({ ...editingWork, client_id: e.target.value || null })}
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                 >
                   <option value="">{isAr ? 'لا يوجد عميل مرتبط' : 'None'}</option>
                   {clients.map((c) => (
@@ -451,7 +451,7 @@ export const WorksManagerPage: React.FC = () => {
                         }}
                         className={`flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-medium transition-all ${
                           videoSource === 'upload'
-                            ? 'bg-[#8B5CF6] text-white shadow-sm'
+                            ? 'bg-[#B51D19] text-white shadow-sm'
                             : 'text-[#9B9B9B] hover:text-white'
                         }`}
                       >
@@ -472,7 +472,7 @@ export const WorksManagerPage: React.FC = () => {
                         }}
                         className={`flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-medium transition-all ${
                           videoSource === 'youtube'
-                            ? 'bg-[#8B5CF6] text-white shadow-sm'
+                            ? 'bg-[#B51D19] text-white shadow-sm'
                             : 'text-[#9B9B9B] hover:text-white'
                         }`}
                       >
@@ -537,7 +537,7 @@ export const WorksManagerPage: React.FC = () => {
                             }
                           }}
                           className={`w-full bg-[#121212] border ${
-                            youtubeError ? 'border-red-500/50 focus:border-red-500' : 'border-[#262626] focus:border-[#8B5CF6]'
+                            youtubeError ? 'border-red-500/50 focus:border-red-500' : 'border-[#262626] focus:border-[#B51D19]'
                           } rounded-xl px-4 py-2.5 text-sm text-white placeholder-[#555] focus:outline-none transition-colors`}
                           dir="ltr"
                         />
@@ -556,7 +556,7 @@ export const WorksManagerPage: React.FC = () => {
                         <div className="rounded-xl overflow-hidden border border-[#262626] bg-[#050505] p-3 space-y-2">
                           <div className="flex items-center justify-between text-xs text-[#9B9B9B]">
                             <span className="flex items-center gap-1.5 font-medium text-[#F5F5F5]">
-                              <Play className="w-3.5 h-3.5 text-[#8B5CF6]" />
+                              <Play className="w-3.5 h-3.5 text-[#E63B32]" />
                               {isAr ? 'معاينة مباشرة من YouTube' : 'Live YouTube Preview'}
                             </span>
                             <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
@@ -597,7 +597,7 @@ export const WorksManagerPage: React.FC = () => {
                   <div className="rounded-2xl border border-[#242424] bg-[#0D0D0D] p-4 space-y-3.5 mt-2">
                     <div className="flex items-center justify-between pb-2.5 border-b border-[#1F1F1F]">
                       <span className="text-xs font-bold text-[#F5F5F5] flex items-center gap-2">
-                        <Sliders className="w-3.5 h-3.5 text-[#8B5CF6]" />
+                        <Sliders className="w-3.5 h-3.5 text-[#E63B32]" />
                         {isAr ? 'إعدادات تشغيل الفيديو' : 'Video Playback Settings'}
                       </span>
                       <span className="text-[10px] text-[#777]">
@@ -631,7 +631,7 @@ export const WorksManagerPage: React.FC = () => {
                               mute: val ? true : prev.mute,
                             }))
                           }}
-                          className="mt-1 w-4 h-4 rounded accent-[#8B5CF6] cursor-pointer"
+                          className="mt-1 w-4 h-4 rounded accent-[#B51D19] cursor-pointer"
                         />
                       </label>
 
@@ -651,7 +651,7 @@ export const WorksManagerPage: React.FC = () => {
                           onChange={(e) =>
                             setPlaybackSettings((prev) => ({ ...prev, mute: e.target.checked }))
                           }
-                          className="mt-1 w-4 h-4 rounded accent-[#8B5CF6] cursor-pointer"
+                          className="mt-1 w-4 h-4 rounded accent-[#B51D19] cursor-pointer"
                         />
                       </label>
 
@@ -671,7 +671,7 @@ export const WorksManagerPage: React.FC = () => {
                           onChange={(e) =>
                             setPlaybackSettings((prev) => ({ ...prev, loop: e.target.checked }))
                           }
-                          className="mt-1 w-4 h-4 rounded accent-[#8B5CF6] cursor-pointer"
+                          className="mt-1 w-4 h-4 rounded accent-[#B51D19] cursor-pointer"
                         />
                       </label>
 
@@ -691,7 +691,7 @@ export const WorksManagerPage: React.FC = () => {
                           onChange={(e) =>
                             setPlaybackSettings((prev) => ({ ...prev, controls: e.target.checked }))
                           }
-                          className="mt-1 w-4 h-4 rounded accent-[#8B5CF6] cursor-pointer"
+                          className="mt-1 w-4 h-4 rounded accent-[#B51D19] cursor-pointer"
                         />
                       </label>
                     </div>
@@ -711,7 +711,7 @@ export const WorksManagerPage: React.FC = () => {
                           const val = e.target.value === '' ? 0 : Math.max(0, parseInt(e.target.value, 10) || 0)
                           setPlaybackSettings((prev) => ({ ...prev, start: val }))
                         }}
-                        className="w-full bg-[#121212] border border-[#262626] focus:border-[#8B5CF6] rounded-xl px-4 py-2 text-xs text-white focus:outline-none transition-colors"
+                        className="w-full bg-[#121212] border border-[#262626] focus:border-[#B51D19] rounded-xl px-4 py-2 text-xs text-white focus:outline-none transition-colors"
                         dir="ltr"
                       />
                       <p className="text-[10px] text-[#666] mt-1">
@@ -777,7 +777,7 @@ export const WorksManagerPage: React.FC = () => {
                   value={editingWork.project_url || ''}
                   onChange={(e) => setEditingWork({ ...editingWork, project_url: e.target.value })}
                   placeholder="https://..."
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                 />
               </div>
 
@@ -789,7 +789,7 @@ export const WorksManagerPage: React.FC = () => {
                   rows={3}
                   value={editingWork.description_ar || ''}
                   onChange={(e) => setEditingWork({ ...editingWork, description_ar: e.target.value })}
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                 />
               </div>
 
@@ -799,7 +799,7 @@ export const WorksManagerPage: React.FC = () => {
                     type="checkbox"
                     checked={editingWork.is_featured ?? false}
                     onChange={(e) => setEditingWork({ ...editingWork, is_featured: e.target.checked })}
-                    className="rounded border-[#303030] text-[#8B5CF6]"
+                    className="rounded border-[#303030] text-[#B51D19] accent-[#B51D19]"
                   />
                   <span>{isAr ? 'تمييز العمل في الصفحة الرئيسية' : 'Feature on homepage'}</span>
                 </label>
@@ -809,7 +809,7 @@ export const WorksManagerPage: React.FC = () => {
                     type="checkbox"
                     checked={editingWork.is_visible ?? true}
                     onChange={(e) => setEditingWork({ ...editingWork, is_visible: e.target.checked })}
-                    className="rounded border-[#303030] text-[#8B5CF6]"
+                    className="rounded border-[#303030] text-[#B51D19] accent-[#B51D19]"
                   />
                   <span>{isAr ? 'إظهار العمل' : 'Visible'}</span>
                 </label>

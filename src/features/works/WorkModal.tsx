@@ -306,7 +306,7 @@ export const WorkModal: React.FC<WorkModalProps> = ({ work, onClose, isAr }) => 
                   onClick={togglePlay}
                   className="absolute inset-0 flex items-center justify-center z-20 cursor-pointer bg-black/35 hover:bg-black/25 transition-colors"
                 >
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-[#8B5CF6] to-rose-500 p-[2px] shadow-2xl shadow-[#8B5CF6]/50 group-hover:scale-105 transition-transform">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-gradient-to-tr from-[#B51D19] to-[#080707] p-[2px] shadow-2xl shadow-[#B51D19]/20 group-hover:scale-105 transition-transform">
                     <div className="w-full h-full rounded-full bg-black/80 backdrop-blur-md flex items-center justify-center text-white">
                       <Play className="w-8 h-8 sm:w-9 sm:h-9 fill-current ml-1 text-white" />
                     </div>
@@ -334,7 +334,7 @@ export const WorkModal: React.FC<WorkModalProps> = ({ work, onClose, isAr }) => 
                   />
                   {/* Progress track */}
                   <div
-                    className="absolute top-0 bottom-0 left-0 bg-gradient-to-r from-red-500 via-red-700 to-red-950 rounded-full"
+                    className="absolute top-0 bottom-0 left-0 bg-gradient-to-r from-[#B51D19] to-[#E63B32] rounded-full"
                     style={{ width: `${progressPercent}%` }}
                   />
                 </div>
@@ -394,7 +394,7 @@ export const WorkModal: React.FC<WorkModalProps> = ({ work, onClose, isAr }) => 
                         step="0.05"
                         value={isMuted ? 0 : volume}
                         onChange={handleVolumeChange}
-                        className="w-16 h-1 accent-[#8B5CF6] bg-white/20 rounded-lg cursor-pointer hidden sm:block opacity-75 group-hover/vol:opacity-100 transition-opacity"
+                        className="w-16 h-1 accent-[#B51D19] bg-white/20 rounded-lg cursor-pointer hidden sm:block opacity-75 group-hover/vol:opacity-100 transition-opacity"
                       />
                     </div>
 

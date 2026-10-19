@@ -181,7 +181,7 @@ export const PagesManagerPage: React.FC = () => {
             <Card key={p.id} className="bg-[#0B0B0B] border-[#242424] p-5 flex flex-col justify-between">
               <div>
                 <div className="flex items-start justify-between mb-3">
-                  <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#38BDF8]/20 to-[#8B5CF6]/20 border border-[#8B5CF6]/30 flex items-center justify-center text-[#8B5CF6]">
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#B51D19]/20 to-[#991815]/5 border border-[#B51D19]/30 flex items-center justify-center text-[#E63B32]">
                     <Layers className="w-5 h-5" />
                   </div>
                   <Badge variant={p.is_visible ? 'accent' : 'default'}>
@@ -192,7 +192,7 @@ export const PagesManagerPage: React.FC = () => {
                 <h4 className="font-bold text-[#F5F5F5] text-base">
                   {isAr ? p.name_ar : p.name_en}
                 </h4>
-                <p className="text-xs text-[#8B5CF6] font-medium mt-0.5">
+                <p className="text-xs text-[#E63B32] font-medium mt-0.5">
                   {isAr ? p.specialization_ar : p.specialization_en}
                 </p>
                 <p className="text-xs text-[#9B9B9B] mt-2 line-clamp-3 whitespace-pre-line">
@@ -264,7 +264,7 @@ export const PagesManagerPage: React.FC = () => {
                   required
                   value={editingPage.name_ar || ''}
                   onChange={(e) => setEditingPage({ ...editingPage, name_ar: e.target.value })}
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                 />
               </div>
 
@@ -276,7 +276,7 @@ export const PagesManagerPage: React.FC = () => {
                   type="text"
                   value={editingPage.specialization_ar || ''}
                   onChange={(e) => setEditingPage({ ...editingPage, specialization_ar: e.target.value })}
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                 />
               </div>
 
@@ -288,7 +288,7 @@ export const PagesManagerPage: React.FC = () => {
                   rows={3}
                   value={editingPage.description_ar || ''}
                   onChange={(e) => setEditingPage({ ...editingPage, description_ar: e.target.value })}
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                 />
               </div>
 
@@ -301,7 +301,7 @@ export const PagesManagerPage: React.FC = () => {
                   value={editingPage.primary_url || ''}
                   onChange={(e) => setEditingPage({ ...editingPage, primary_url: e.target.value })}
                   placeholder="https://..."
-                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                  className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                 />
               </div>
 
@@ -329,7 +329,7 @@ export const PagesManagerPage: React.FC = () => {
                   id="pageVisible"
                   checked={editingPage.is_visible ?? true}
                   onChange={(e) => setEditingPage({ ...editingPage, is_visible: e.target.checked })}
-                  className="rounded border-[#303030] text-[#8B5CF6]"
+                  className="rounded border-[#303030] text-[#B51D19] accent-[#B51D19]"
                 />
                 <label htmlFor="pageVisible" className="text-xs text-[#D1D1D1]">
                   {isAr ? 'إظهار في الموقع العام' : 'Show on public site'}

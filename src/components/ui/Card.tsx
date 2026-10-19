@@ -20,7 +20,7 @@ export const Card: React.FC<CardProps> = ({
         hoverable &&
           'hover:border-[#383838] hover:bg-[#0E0E0E] hover:-translate-y-1 hover:shadow-2xl hover:shadow-black/60',
         glow &&
-          'before:absolute before:-inset-[1px] before:rounded-2xl before:bg-gradient-to-r before:from-[#8B5CF6]/30 before:to-[#38BDF8]/20 before:-z-10 before:blur-sm',
+          'before:absolute before:-inset-[1px] before:rounded-2xl before:bg-gradient-to-r before:from-[#B51D19]/35 before:to-[#E63B32]/20 before:-z-10 before:blur-sm',
         className
       )}
       {...props}

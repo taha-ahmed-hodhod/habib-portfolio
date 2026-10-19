@@ -17,7 +17,7 @@ export const Badge: React.FC<BadgeProps> = ({
   const variants = {
     default: 'bg-[#151515] text-[#9B9B9B] border border-[#242424]',
     accent:
-      'bg-[#8B5CF6]/10 text-[#A78BFA] border border-[#8B5CF6]/30 font-semibold',
+      'bg-[#B51D19]/15 text-[#E63B32] border border-[#B51D19]/35 font-semibold',
     outline: 'bg-transparent text-[#F5F5F5] border border-[#303030]',
     dot: 'bg-[#151515] text-[#F5F5F5] border border-[#242424]',
   }
@@ -25,7 +25,7 @@ export const Badge: React.FC<BadgeProps> = ({
   return (
     <span className={cn(base, variants[variant], className)} {...props}>
       {variant === 'dot' && (
-        <span className="w-1.5 h-1.5 rounded-full bg-[#8B5CF6] animate-pulse" />
+        <span className="w-1.5 h-1.5 rounded-full bg-[#E63B32] animate-pulse" />
       )}
       {children}
     </span>

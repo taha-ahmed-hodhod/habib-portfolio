@@ -194,7 +194,7 @@ export const SettingsManagerPage: React.FC = () => {
             onClick={() => handleTabChange('sections')}
             className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'sections'
-                ? 'bg-[#8B5CF6] text-white shadow-lg shadow-[#8B5CF6]/20'
+                ? 'bg-[#B51D19] text-white shadow-lg shadow-[#B51D19]/20'
                 : 'text-[#9B9B9B] hover:text-white'
             }`}
           >
@@ -207,7 +207,7 @@ export const SettingsManagerPage: React.FC = () => {
             onClick={() => handleTabChange('security')}
             className={`flex items-center gap-2 px-3.5 py-1.5 rounded-lg text-xs font-semibold transition-all ${
               activeTab === 'security'
-                ? 'bg-[#8B5CF6] text-white shadow-lg shadow-[#8B5CF6]/20'
+                ? 'bg-[#B51D19] text-white shadow-lg shadow-[#B51D19]/20'
                 : 'text-[#9B9B9B] hover:text-white'
             }`}
           >
@@ -229,7 +229,7 @@ export const SettingsManagerPage: React.FC = () => {
 
           <form onSubmit={handleSaveSettings} className="space-y-6">
             <Card className="bg-[#0B0B0B] border-[#242424] p-6 space-y-4">
-              <h3 className="text-sm font-semibold text-[#8B5CF6] uppercase tracking-wider">
+              <h3 className="text-sm font-semibold text-[#E63B32] uppercase tracking-wider">
                 {isAr ? 'ظهور الأقسام في الصفحة الرئيسية' : 'Section Visibility'}
               </h3>
 
@@ -247,7 +247,7 @@ export const SettingsManagerPage: React.FC = () => {
                         onClick={() => toggleVisibility(sec.key)}
                         className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all ${
                           isVis
-                            ? 'bg-[#8B5CF6]/20 text-[#A78BFA] border border-[#8B5CF6]/40'
+                            ? 'bg-[#B51D19]/20 text-[#E63B32] border border-[#B51D19]/40'
                             : 'bg-[#1F1F1F] text-[#777] border border-[#2E2E2E]'
                         }`}
                       >
@@ -261,7 +261,7 @@ export const SettingsManagerPage: React.FC = () => {
             </Card>
 
             <Card className="bg-[#0B0B0B] border-[#242424] p-6 space-y-4">
-              <h3 className="text-sm font-semibold text-[#8B5CF6] uppercase tracking-wider">
+              <h3 className="text-sm font-semibold text-[#E63B32] uppercase tracking-wider">
                 {isAr ? 'إعدادات قسم الآراء والتقييمات' : 'Testimonials Preferences'}
               </h3>
 
@@ -278,7 +278,7 @@ export const SettingsManagerPage: React.FC = () => {
                     onChange={(e) =>
                       setSettings({ ...settings, testimonials_limit: parseInt(e.target.value) || 6 })
                     }
-                    className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#8B5CF6]"
+                    className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:border-[#B51D19]"
                   />
                 </div>
 
@@ -290,7 +290,7 @@ export const SettingsManagerPage: React.FC = () => {
                     onChange={(e) =>
                       setSettings({ ...settings, testimonials_cta_visible: e.target.checked })
                     }
-                    className="rounded border-[#303030] text-[#8B5CF6]"
+                    className="rounded border-[#303030] text-[#B51D19] accent-[#B51D19]"
                   />
                   <label htmlFor="ctaReview" className="text-xs text-[#D1D1D1]">
                     {isAr ? 'إظهار زر "شاركنا رأيك" للزوار' : 'Show "Leave a Review" button to visitors'}
@@ -321,7 +321,7 @@ export const SettingsManagerPage: React.FC = () => {
           <Card className="bg-[#0B0B0B] border-[#242424] p-6">
             <div className="flex items-center justify-between flex-wrap gap-4">
               <div className="flex items-center gap-3.5">
-                <div className="w-12 h-12 rounded-2xl bg-[#8B5CF6]/15 border border-[#8B5CF6]/30 flex items-center justify-center text-[#8B5CF6]">
+                <div className="w-12 h-12 rounded-2xl bg-[#B51D19]/15 border border-[#B51D19]/30 flex items-center justify-center text-[#E63B32]">
                   <Mail className="w-5 h-5" />
                 </div>
                 <div>
@@ -344,7 +344,7 @@ export const SettingsManagerPage: React.FC = () => {
           {/* Change Password Form Card */}
           <Card className="bg-[#0B0B0B] border-[#242424] p-6 space-y-6">
             <div className="flex items-start gap-3 border-b border-[#1C1C1C] pb-4">
-              <div className="w-9 h-9 rounded-xl bg-[#141414] border border-[#242424] flex items-center justify-center text-[#8B5CF6] shrink-0 mt-0.5">
+              <div className="w-9 h-9 rounded-xl bg-[#141414] border border-[#242424] flex items-center justify-center text-[#E63B32] shrink-0 mt-0.5">
                 <KeyRound className="w-4 h-4" />
               </div>
               <div>
@@ -392,7 +392,7 @@ export const SettingsManagerPage: React.FC = () => {
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 pr-11 text-sm text-white focus:outline-none focus:border-[#8B5CF6] transition-colors"
+                    className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 pr-11 text-sm text-white focus:outline-none focus:border-[#B51D19] transition-colors"
                   />
                   <button
                     type="button"
@@ -416,7 +416,7 @@ export const SettingsManagerPage: React.FC = () => {
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
                     placeholder="••••••••"
-                    className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 pr-11 text-sm text-white focus:outline-none focus:border-[#8B5CF6] transition-colors"
+                    className="w-full bg-[#121212] border border-[#262626] rounded-xl px-4 py-2.5 pr-11 text-sm text-white focus:outline-none focus:border-[#B51D19] transition-colors"
                   />
                   <button
                     type="button"

@@ -6,7 +6,7 @@ import { StarfieldBackground } from '@/components/ui/StarfieldBackground'
 
 export const PublicLayout: React.FC = () => {
   return (
-    <div className="min-h-screen bg-[#050505] text-[#F5F5F5] flex flex-col selection:bg-[#8B5CF6]/30 selection:text-white relative overflow-x-hidden max-w-full w-full">
+    <div className="min-h-screen bg-[#050505] text-[#F5F5F5] flex flex-col selection:bg-[#B51D19]/40 selection:text-white relative overflow-x-hidden max-w-full w-full">
       {/* Dynamic Starfield Background */}
       <StarfieldBackground
         className="fixed inset-0 pointer-events-none z-0"
