@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { Card } from '@/components/ui/Card'
 import { useSEO } from '@/hooks/useSEO'
+import { getYouTubeEmbedUrl, parseVideoUrl } from '@/lib/youtube'
 
 export const WorkDetailPage: React.FC = () => {
   const { id } = useParams<{ id: string }>()
@@ -16,6 +17,10 @@ export const WorkDetailPage: React.FC = () => {
 
   const [work, setWork] = useState<Work | null>(null)
   const [loading, setLoading] = useState(true)
+
+  const parsed = parseVideoUrl(work?.media_url)
+  const isYouTube = Boolean(work && work.media_type === 'video' && parsed.isYouTube)
+  const settings = parsed.settings
 
   useSEO({
     title: work ? (isAr ? work.title_ar : work.title_en) : undefined,
@@ -85,14 +90,26 @@ export const WorkDetailPage: React.FC = () => {
 
       <div className="relative aspect-video rounded-3xl overflow-hidden bg-black border border-[#242424] mb-8 shadow-2xl">
         {work.media_type === 'video' ? (
-          <video
-            src={work.media_url}
-            poster={work.thumbnail_url || undefined}
-            controls
-            autoPlay
-            playsInline
-            className="w-full h-full object-contain"
-          />
+          isYouTube ? (
+            <iframe
+              src={getYouTubeEmbedUrl(work.media_url, settings) || ''}
+              title={isAr ? work.title_ar : work.title_en}
+              className="w-full h-full border-0"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowFullScreen
+            />
+          ) : (
+            <video
+              src={parsed.cleanUrl}
+              poster={work.thumbnail_url || undefined}
+              controls={settings.controls ?? true}
+              autoPlay={settings.autoplay ?? false}
+              muted={settings.mute || settings.autoplay}
+              loop={settings.loop ?? false}
+              playsInline
+              className="w-full h-full object-contain"
+            />
+          )
         ) : work.media_type === 'document' ? (
           <div className="w-full h-full flex flex-col items-center justify-center p-12 text-center space-y-4">
             <div className="w-20 h-20 rounded-3xl bg-[#151515] border border-[#282828] flex items-center justify-center text-[#38BDF8] shadow-2xl">
@@ -161,6 +178,7 @@ export const WorkDetailPage: React.FC = () => {
                 </span>
               </div>
             )}
+
 
             {work.project_url && (
               <div className="pt-2">

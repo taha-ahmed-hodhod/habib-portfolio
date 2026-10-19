@@ -93,14 +93,14 @@ export const HeroSection: React.FC = () => {
       className="relative min-h-[90vh] flex items-center justify-center pt-12 pb-20 overflow-hidden"
     >
       {/* Background ambient lighting */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-gradient-to-tr from-[#8B5CF6]/15 via-red-500/5 to-amber-500/10 rounded-full blur-[140px] pointer-events-none -z-10" />
-      <div className="absolute -top-10 left-10 w-72 h-72 bg-[#38BDF8]/5 rounded-full blur-3xl pointer-events-none -z-10" />
+      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] bg-gradient-to-tr from-red-600/15 via-red-900/8 to-red-950/10 rounded-full blur-[140px] pointer-events-none -z-10" />
+      <div className="absolute -top-10 left-10 w-72 h-72 bg-red-950/8 rounded-full blur-3xl pointer-events-none -z-10" />
 
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 w-full text-center flex flex-col items-center">
         {/* Profile Avatar with Glowing Halo Ring */}
         <div className="relative mb-8 group">
-          <div className="absolute -inset-1.5 rounded-full bg-gradient-to-r from-amber-500 via-rose-500 to-[#8B5CF6] opacity-80 blur-md group-hover:opacity-100 transition-opacity duration-500 animate-pulse" />
-          <div className="relative w-36 h-36 sm:w-44 sm:h-44 rounded-full p-[3px] bg-gradient-to-b from-amber-400 via-rose-500 to-[#8B5CF6]">
+          <div className="absolute -inset-2 rounded-full hero-glow-animated opacity-70 blur-md group-hover:opacity-100 transition-opacity duration-500" />
+          <div className="relative w-36 h-36 sm:w-44 sm:h-44 rounded-full p-[4px] hero-border-animated">
             <div className="w-full h-full rounded-full overflow-hidden bg-[#0A0A0A] flex items-center justify-center relative">
               {loading && !profile.avatar_url ? (
                 <Skeleton variant="circular" className="w-full h-full" />
@@ -112,7 +112,7 @@ export const HeroSection: React.FC = () => {
                 />
               ) : (
                 <div className="w-full h-full bg-gradient-to-br from-[#121212] via-[#0D0D0D] to-[#181818] flex items-center justify-center relative">
-                  <span className="text-4xl sm:text-5xl font-black bg-gradient-to-tr from-amber-400 via-rose-400 to-[#8B5CF6] bg-clip-text text-transparent">
+                  <span className="text-4xl sm:text-5xl font-black gradient-name">
                     HR
                   </span>
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent pointer-events-none" />
@@ -123,14 +123,14 @@ export const HeroSection: React.FC = () => {
         </div>
 
         {/* Name Title */}
-        <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight text-[#F5F5F5] mb-3">
-          <span className="bg-gradient-to-r from-white via-[#F5F5F5] to-[#D1D1D1] bg-clip-text text-transparent">
+        <h1 className="text-3xl sm:text-5xl md:text-6xl font-black tracking-tight mb-3">
+          <span className="gradient-name">
             {isAr ? profile.full_name_ar : profile.full_name_en}
           </span>
         </h1>
 
         {/* Subtitle / Job Title */}
-        <h2 className="text-base sm:text-xl font-bold bg-gradient-to-r from-amber-400 via-rose-400 to-[#8B5CF6] bg-clip-text text-transparent mb-5 max-w-2xl">
+        <h2 className="text-base sm:text-xl font-bold bg-gradient-to-r from-red-500 via-red-400 to-red-700 bg-clip-text text-transparent mb-5 max-w-2xl">
           {isAr ? profile.title_ar : profile.title_en}
         </h2>
 

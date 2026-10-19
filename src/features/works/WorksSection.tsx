@@ -1,10 +1,11 @@
-import React, { useEffect, useState, useRef } from 'react'
+import React, { useEffect, useState, useRef, useCallback } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Play, Film, ArrowUpRight, ImageIcon, FileText } from 'lucide-react'
+import { Film, ArrowUpRight, ImageIcon, FileText } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import type { Work, Category } from '@/types/database'
 import { WorkModal } from './WorkModal'
 import { dataSync } from '@/services/dataSync'
+import { isYouTubeUrl, getYouTubeThumbnailUrl, getYouTubeCardPreviewUrl } from '@/lib/youtube'
 
 export const WorksSection: React.FC = () => {
   const { t, i18n } = useTranslation()
@@ -14,14 +15,42 @@ export const WorksSection: React.FC = () => {
   const [categories, setCategories] = useState<Category[]>([])
   const [selectedCategory, setSelectedCategory] = useState<string>('all')
   const [activeModalWork, setActiveModalWork] = useState<Work | null>(null)
-
   const [loading, setLoading] = useState(true)
+
+  // Coordination states for single active card playback
+  const [hoveredWorkId, setHoveredWorkId] = useState<string | null>(null)
+  const [viewportWorkId, setViewportWorkId] = useState<string | null>(null)
+  const [isMobileDevice, setIsMobileDevice] = useState(false)
+  const visibilityMapRef = useRef<Map<string, number>>(new Map())
+
+  // Detect mobile / touch environment (pointer: coarse or screen <= 768px)
+  useEffect(() => {
+    const checkMobile = () => {
+      if (typeof window === 'undefined') return
+      const isCoarse = window.matchMedia('(pointer: coarse)').matches
+      const isSmallScreen = window.innerWidth <= 768
+      const hasTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0
+      setIsMobileDevice((isCoarse && hasTouch) || isSmallScreen)
+    }
+
+    checkMobile()
+    window.addEventListener('resize', checkMobile)
+    return () => window.removeEventListener('resize', checkMobile)
+  }, [])
 
   const loadData = async () => {
     try {
       const [{ data: worksData }, { data: catsData }] = await Promise.all([
-        supabase.from('works').select('*, category:categories(*)').eq('is_visible', true).order('sort_order', { ascending: true }),
-        supabase.from('categories').select('*').eq('is_visible', true).order('sort_order', { ascending: true }),
+        supabase
+          .from('works')
+          .select('*, category:categories(*)')
+          .eq('is_visible', true)
+          .order('sort_order', { ascending: true }),
+        supabase
+          .from('categories')
+          .select('*')
+          .eq('is_visible', true)
+          .order('sort_order', { ascending: true }),
       ])
 
       if (worksData) setWorks(worksData)
@@ -45,6 +74,65 @@ export const WorksSection: React.FC = () => {
     }
   }, [])
 
+  // Viewport visibility callback for mobile devices
+  const handleVisibilityChange = useCallback((workId: string, ratio: number) => {
+    visibilityMapRef.current.set(workId, ratio)
+
+    // Find the video card with the highest visibility ratio
+    let bestId: string | null = null
+    let maxRatio = 0
+
+    for (const [id, r] of visibilityMapRef.current.entries()) {
+      if (r > maxRatio) {
+        maxRatio = r
+        bestId = id
+      }
+    }
+
+    setViewportWorkId((current) => {
+      // Hysteresis: only start playing if at least 50% in viewport
+      if (maxRatio >= 0.5 && bestId) {
+        // If current card is still sufficiently visible (>= 0.35) and within 15% of best, keep it to avoid thrashing
+        if (current && current !== bestId) {
+          const currentRatio = visibilityMapRef.current.get(current) || 0
+          if (currentRatio >= 0.35 && maxRatio - currentRatio < 0.15) {
+            return current
+          }
+        }
+        return bestId
+      }
+
+      // If current card dropped below 0.35, stop playback
+      if (current) {
+        const currentRatio = visibilityMapRef.current.get(current) || 0
+        if (currentRatio < 0.35) {
+          return null
+        }
+        return current
+      }
+
+      return null
+    })
+  }, [])
+
+  const handleHoverStart = useCallback((id: string) => {
+    setHoveredWorkId(id)
+  }, [])
+
+  const handleHoverEnd = useCallback((id: string) => {
+    setHoveredWorkId((prev) => (prev === id ? null : prev))
+  }, [])
+
+  // Active playing card ID:
+  // 1. If modal is open, completely suppress card autoplay.
+  // 2. On desktop (mouse devices): ONLY hover triggers autoplay.
+  // 3. On mobile (touch/small screens): hover has priority, otherwise the most visible video in viewport autoplays.
+  const activePlayingId = activeModalWork
+    ? null
+    : isMobileDevice
+    ? hoveredWorkId || viewportWorkId
+    : hoveredWorkId
+
   const filteredWorks =
     selectedCategory === 'all'
       ? works
@@ -57,11 +145,11 @@ export const WorksSection: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center max-w-2xl mx-auto mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-black tracking-tight mb-3">
-            <span className="bg-gradient-to-r from-amber-400 via-rose-500 to-[#8B5CF6] bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-red-500 via-red-400 to-red-800 bg-clip-text text-transparent">
               {isAr ? 'أهم الأعمال' : 'Featured Works'}
             </span>
           </h2>
-          <div className="w-16 h-1 bg-gradient-to-r from-amber-400 to-rose-500 mx-auto rounded-full mb-3" />
+          <div className="w-16 h-1 bg-gradient-to-r from-red-500 to-red-800 mx-auto rounded-full mb-3" />
           <p className="text-xs sm:text-sm text-[#9B9B9B]">
             {isAr
               ? 'صور — فيديوهات — مستندات (اضغط على أي عمل لعرضه)'
@@ -76,7 +164,7 @@ export const WorksSection: React.FC = () => {
                 onClick={() => setSelectedCategory('all')}
                 className={`shrink-0 whitespace-nowrap px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 ${
                   selectedCategory === 'all'
-                    ? 'bg-gradient-to-r from-amber-500/20 to-rose-500/20 text-rose-300 border border-rose-500/40 shadow-lg'
+                    ? 'bg-gradient-to-r from-red-500/20 to-red-900/20 text-red-300 border border-red-500/40 shadow-lg'
                     : 'bg-[#0E0E0E] text-[#9B9B9B] border border-[#222] hover:text-white hover:bg-[#181818]'
                 }`}
               >
@@ -88,7 +176,7 @@ export const WorksSection: React.FC = () => {
                   onClick={() => setSelectedCategory(cat.id)}
                   className={`shrink-0 whitespace-nowrap px-4 py-2 rounded-xl text-xs font-semibold transition-all duration-300 ${
                     selectedCategory === cat.id
-                      ? 'bg-gradient-to-r from-amber-500/20 to-rose-500/20 text-rose-300 border border-rose-500/40 shadow-lg'
+                      ? 'bg-gradient-to-r from-red-500/20 to-red-900/20 text-red-300 border border-red-500/40 shadow-lg'
                       : 'bg-[#0E0E0E] text-[#9B9B9B] border border-[#222] hover:text-white hover:bg-[#181818]'
                   }`}
                 >
@@ -118,6 +206,10 @@ export const WorksSection: React.FC = () => {
                 key={work.id}
                 work={work}
                 isAr={isAr}
+                isActive={activePlayingId === work.id}
+                onHoverStart={handleHoverStart}
+                onHoverEnd={handleHoverEnd}
+                onVisibilityChange={handleVisibilityChange}
                 onClick={() => setActiveModalWork(work)}
               />
             ))}
@@ -137,80 +229,89 @@ export const WorksSection: React.FC = () => {
 interface WorkCardProps {
   work: Work
   isAr: boolean
+  isActive: boolean
+  onHoverStart: (id: string) => void
+  onHoverEnd: (id: string) => void
+  onVisibilityChange: (id: string, ratio: number) => void
   onClick: () => void
 }
 
-const WorkCardItem: React.FC<WorkCardProps> = ({ work, isAr, onClick }) => {
+const WorkCardItem: React.FC<WorkCardProps> = ({
+  work,
+  isAr,
+  isActive,
+  onHoverStart,
+  onHoverEnd,
+  onVisibilityChange,
+  onClick,
+}) => {
+  const isVideo = work.media_type === 'video'
+  const isYouTube = isVideo && isYouTubeUrl(work.media_url)
+
   const videoRef = useRef<HTMLVideoElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
-  const [isPlaying, setIsPlaying] = useState(false)
-  const [isNearView, setIsNearView] = useState(false)
 
-  // Lazy loading observer for media
+  // Track viewport visibility for mobile devices
   useEffect(() => {
-    if (!containerRef.current) return
+    if (!isVideo || !containerRef.current) return
+
+    const el = containerRef.current
     const observer = new IntersectionObserver(
       (entries) => {
         entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setIsNearView(true)
-            observer.disconnect()
-          }
+          onVisibilityChange(work.id, entry.intersectionRatio)
         })
       },
-      { rootMargin: '300px' }
+      {
+        threshold: [0, 0.25, 0.35, 0.5, 0.75, 1.0],
+      }
     )
 
-    observer.observe(containerRef.current)
-    return () => observer.disconnect()
-  }, [])
-
-  // Mobile viewport auto-playback using IntersectionObserver
-  useEffect(() => {
-    if (work.media_type !== 'video' || !containerRef.current || !isNearView) return
-
-    const isMobile = window.matchMedia('(max-width: 768px)').matches || ('ontouchstart' in window)
-    if (!isMobile) return
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          if (!videoRef.current) return
-          if (entry.isIntersecting && entry.intersectionRatio >= 0.4) {
-            videoRef.current
-              .play()
-              .then(() => setIsPlaying(true))
-              .catch(() => {})
-          } else {
-            videoRef.current.pause()
-            setIsPlaying(false)
-          }
-        })
-      },
-      { threshold: [0, 0.4] }
-    )
-
-    observer.observe(containerRef.current)
-    return () => observer.disconnect()
-  }, [work.media_type, work.media_url, isNearView])
-
-  // Desktop hover playback
-  const handleMouseEnter = () => {
-    setIsNearView(true)
-    if (work.media_type === 'video' && videoRef.current) {
-      videoRef.current
-        .play()
-        .then(() => setIsPlaying(true))
-        .catch(() => {})
+    observer.observe(el)
+    return () => {
+      observer.disconnect()
+      onVisibilityChange(work.id, 0)
     }
+  }, [isVideo, work.id, onVisibilityChange])
+
+  // Instant playback control for self-hosted video
+  useEffect(() => {
+    if (!isVideo || isYouTube) return
+
+    const video = videoRef.current
+    if (!video) return
+
+    if (isActive) {
+      video.muted = true
+      if (video.ended) {
+        video.currentTime = 0
+      }
+      const playPromise = video.play()
+      if (playPromise !== undefined) {
+        playPromise.catch(() => {})
+      }
+    } else {
+      video.pause()
+      video.currentTime = 0
+    }
+  }, [isActive, isVideo, isYouTube])
+
+  // Instant Desktop Hover Triggers (Immediate 0ms response)
+  const handleMouseEnter = () => {
+    if (!isVideo) return
+    onHoverStart(work.id)
   }
 
   const handleMouseLeave = () => {
-    if (work.media_type === 'video' && videoRef.current) {
-      videoRef.current.pause()
-      setIsPlaying(false)
-    }
+    if (!isVideo) return
+    onHoverEnd(work.id)
   }
+
+  // Determine thumbnail URL
+  const thumbnailUrl =
+    work.thumbnail_url ||
+    (isYouTube ? getYouTubeThumbnailUrl(work.media_url, 'hq') : undefined) ||
+    undefined
 
   return (
     <div
@@ -221,37 +322,47 @@ const WorkCardItem: React.FC<WorkCardProps> = ({ work, isAr, onClick }) => {
       className="group cursor-pointer rounded-2xl bg-[#0B0B0B] border border-[#242424] hover:border-rose-500/40 overflow-hidden transition-all duration-300 flex flex-col justify-between hover:-translate-y-1 hover:shadow-2xl hover:shadow-rose-950/20"
     >
       <div className="relative aspect-video bg-[#121212] overflow-hidden">
-        {work.media_type === 'video' ? (
+        {isVideo ? (
           <>
-            {isNearView ? (
+            {/* Base Thumbnail (always present beneath video to prevent layout shifts or black flash) */}
+            <img
+              src={thumbnailUrl}
+              alt={isAr ? work.title_ar : work.title_en}
+              loading="lazy"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+
+            {/* Self-hosted video element: ALWAYS mounted with preload="metadata" for INSTANT (0ms) playback */}
+            {!isYouTube && (
               <video
                 ref={videoRef}
                 src={work.media_url}
-                poster={work.thumbnail_url || undefined}
                 muted
                 playsInline
                 loop
                 preload="metadata"
-                onPlay={() => setIsPlaying(true)}
-                onPause={() => setIsPlaying(false)}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-              />
-            ) : (
-              <img
-                src={work.thumbnail_url || undefined}
-                alt={work.title_ar}
-                loading="lazy"
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-200 ${
+                  isActive ? 'opacity-100 z-10' : 'opacity-0 pointer-events-none'
+                }`}
               />
             )}
-            {!isPlaying && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/20 transition-colors pointer-events-none">
-                <div className="w-12 h-12 rounded-full bg-white/90 text-black flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform">
-                  <Play className="w-5 h-5 fill-current ml-0.5" />
-                </div>
-              </div>
+
+            {/* Active YouTube preview iframe */}
+            {isYouTube && isActive && (
+              <iframe
+                src={getYouTubeCardPreviewUrl(work.media_url) || undefined}
+                title={isAr ? work.title_ar : work.title_en}
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                tabIndex={-1}
+                loading="eager"
+                className="absolute inset-0 w-full h-full object-cover pointer-events-none border-0 z-10"
+              />
             )}
-            <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-semibold text-amber-300 border border-amber-500/30 flex items-center gap-1 z-10">
+
+
+
+            {/* Consistent Video Type Badge */}
+            <div className="absolute top-3 right-3 bg-black/70 backdrop-blur-md px-2.5 py-1 rounded-full text-[10px] font-semibold text-amber-300 border border-amber-500/30 flex items-center gap-1 z-30 pointer-events-none">
               <Film className="w-3 h-3" />
               <span>{isAr ? 'فيديو' : 'Video'}</span>
             </div>
@@ -318,3 +429,4 @@ const WorkCardItem: React.FC<WorkCardProps> = ({ work, isAr, onClick }) => {
     </div>
   )
 }
+

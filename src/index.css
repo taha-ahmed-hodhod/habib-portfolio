@@ -63,3 +63,79 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+/* ── Red-to-Black Animated Gradient Name ── */
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.gradient-name {
+  background: linear-gradient(
+    90deg,
+    #DC2626 0%,
+    #EF4444 18%,
+    #F87171 32%,
+    #DC2626 50%,
+    #991B1B 68%,
+    #450A0A 85%,
+    #DC2626 100%
+  );
+  background-size: 200% 100%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: gradient-shift 4s ease-in-out infinite;
+}
+
+/* ── Hero Profile Image: Animated Spinning Border ── */
+@keyframes border-spin {
+  from { --border-angle: 0deg; }
+  to { --border-angle: 360deg; }
+}
+
+@property --border-angle {
+  syntax: '<angle>';
+  initial-value: 0deg;
+  inherits: false;
+}
+
+.hero-border-animated {
+  background: conic-gradient(
+    from var(--border-angle),
+    #DC2626 0%,
+    #EF4444 15%,
+    #991B1B 35%,
+    #450A0A 50%,
+    #0A0A0A 65%,
+    #450A0A 75%,
+    #991B1B 85%,
+    #DC2626 100%
+  );
+  animation: border-spin 4s linear infinite;
+}
+
+.hero-glow-animated {
+  background: conic-gradient(
+    from var(--border-angle),
+    #DC2626 0%,
+    #EF4444 25%,
+    #991B1B 50%,
+    #450A0A 75%,
+    #DC2626 100%
+  );
+  animation: border-spin 4s linear infinite;
+}
+
+/* ── Reduced Motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .gradient-name {
+    animation: none;
+    background-position: 0% 50%;
+  }
+  .hero-border-animated,
+  .hero-glow-animated {
+    animation: none;
+  }
+}

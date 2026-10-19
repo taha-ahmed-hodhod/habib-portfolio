@@ -19,8 +19,15 @@ export interface MediaValidationConfig {
 
 export const MEDIA_CONFIG = {
   image: {
-    allowedMimeTypes: ['image/jpeg', 'image/png', 'image/webp'],
-    maxSizeBytes: 10 * 1024 * 1024, // 10MB
+    allowedMimeTypes: [
+      'image/jpeg',
+      'image/png',
+      'image/webp',
+      'image/gif',
+      'image/svg+xml',
+      'image/jfif',
+    ],
+    maxSizeBytes: 20 * 1024 * 1024, // 20MB
   },
   video: {
     allowedMimeTypes: ['video/mp4', 'video/webm'],
@@ -92,7 +99,8 @@ export function extractStoragePath(publicUrl: string | null | undefined): string
   const marker = `/storage/v1/object/public/${BUCKET_NAME}/`
   const index = publicUrl.indexOf(marker)
   if (index !== -1) {
-    return publicUrl.substring(index + marker.length)
+    const rawPath = publicUrl.substring(index + marker.length)
+    return rawPath.split(/[?#]/)[0]
   }
   return null
 }
@@ -124,6 +132,7 @@ export async function uploadMediaFile(
     .from(BUCKET_NAME)
     .upload(filePath, file, {
       cacheControl: '3600',
+      contentType: file.type || undefined,
       upsert: false,
     })
 

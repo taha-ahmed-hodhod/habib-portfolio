@@ -16,6 +16,7 @@ import {
 import type { Work } from '@/types/database'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
+import { getYouTubeEmbedUrl, parseVideoUrl } from '@/lib/youtube'
 
 export interface WorkModalProps {
   work: Work | null
@@ -24,6 +25,9 @@ export interface WorkModalProps {
 }
 
 export const WorkModal: React.FC<WorkModalProps> = ({ work, onClose, isAr }) => {
+  const parsed = parseVideoUrl(work?.media_url)
+  const isYouTube = Boolean(work && work.media_type === 'video' && parsed.isYouTube)
+  const settings = parsed.settings
   const videoRef = useRef<HTMLVideoElement>(null)
   const containerRef = useRef<HTMLDivElement>(null)
   const progressBarRef = useRef<HTMLDivElement>(null)
@@ -156,7 +160,15 @@ export const WorkModal: React.FC<WorkModalProps> = ({ work, onClose, isAr }) => 
         } else {
           onClose()
         }
-      } else if (e.code === 'Space') {
+        return
+      }
+
+      // If YouTube or not a self-hosted video, don't intercept player keys
+      if (isYouTube || work?.media_type !== 'video') {
+        return
+      }
+
+      if (e.code === 'Space') {
         e.preventDefault()
         togglePlay()
       } else if (e.key === 'ArrowRight') {
@@ -198,7 +210,20 @@ export const WorkModal: React.FC<WorkModalProps> = ({ work, onClose, isAr }) => 
   const handleLoadedMetadata = () => {
     if (!videoRef.current) return
     setDuration(videoRef.current.duration)
-    videoRef.current.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false))
+
+    if (settings.start && settings.start > 0) {
+      videoRef.current.currentTime = settings.start
+      setCurrentTime(settings.start)
+    }
+
+    if (settings.mute || settings.autoplay) {
+      videoRef.current.muted = true
+      setIsMuted(true)
+    }
+
+    if (settings.autoplay) {
+      videoRef.current.play().then(() => setIsPlaying(true)).catch(() => setIsPlaying(false))
+    }
   }
 
   if (!work) return null
@@ -244,15 +269,28 @@ export const WorkModal: React.FC<WorkModalProps> = ({ work, onClose, isAr }) => 
           className="relative bg-black flex items-center justify-center min-h-[300px] max-h-[68vh] overflow-hidden group select-none"
         >
           {work.media_type === 'video' ? (
-            <>
-              {/* Ambient Cinematic Glow */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40 pointer-events-none z-10" />
+            isYouTube ? (
+              <div className="relative w-full aspect-video max-h-[68vh] flex items-center justify-center bg-black">
+                <iframe
+                  src={getYouTubeEmbedUrl(work.media_url, settings) || ''}
+                  title={isAr ? work.title_ar : work.title_en}
+                  className="w-full h-full border-0 max-h-[68vh]"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+            ) : (
+              <>
+                {/* Ambient Cinematic Glow */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-transparent to-black/40 pointer-events-none z-10" />
 
               <video
                 ref={videoRef}
-                src={work.media_url}
+                src={parsed.cleanUrl}
                 poster={work.thumbnail_url || undefined}
                 playsInline
+                loop={settings.loop}
+                muted={settings.mute || settings.autoplay || isMuted}
                 preload="auto"
                 onTimeUpdate={handleTimeUpdate}
                 onLoadedMetadata={handleLoadedMetadata}
@@ -277,11 +315,12 @@ export const WorkModal: React.FC<WorkModalProps> = ({ work, onClose, isAr }) => 
               )}
 
               {/* Bottom Custom Cinematic Control Bar */}
-              <div
-                className={`absolute bottom-0 inset-x-0 p-3 sm:p-4 bg-gradient-to-t from-black/95 via-black/80 to-transparent z-30 transition-opacity duration-300 ${
-                  showControls || !isPlaying ? 'opacity-100' : 'opacity-0 pointer-events-none'
-                }`}
-              >
+              {settings.controls !== false && (
+                <div
+                  className={`absolute bottom-0 inset-x-0 p-3 sm:p-4 bg-gradient-to-t from-black/95 via-black/80 to-transparent z-30 transition-opacity duration-300 ${
+                    showControls || !isPlaying ? 'opacity-100' : 'opacity-0 pointer-events-none'
+                  }`}
+                >
                 {/* Scrubbable Progress Bar */}
                 <div
                   ref={progressBarRef}
@@ -295,7 +334,7 @@ export const WorkModal: React.FC<WorkModalProps> = ({ work, onClose, isAr }) => 
                   />
                   {/* Progress track */}
                   <div
-                    className="absolute top-0 bottom-0 left-0 bg-gradient-to-r from-amber-400 via-rose-500 to-[#8B5CF6] rounded-full"
+                    className="absolute top-0 bottom-0 left-0 bg-gradient-to-r from-red-500 via-red-700 to-red-950 rounded-full"
                     style={{ width: `${progressPercent}%` }}
                   />
                 </div>
@@ -389,8 +428,9 @@ export const WorkModal: React.FC<WorkModalProps> = ({ work, onClose, isAr }) => 
                   </div>
                 </div>
               </div>
+              )}
             </>
-          ) : work.media_type === 'document' ? (
+          )) : work.media_type === 'document' ? (
             <div className="flex flex-col items-center justify-center p-12 text-center space-y-4">
               <div className="w-20 h-20 rounded-3xl bg-[#151515] border border-[#282828] flex items-center justify-center text-[#38BDF8] shadow-2xl">
                 <FileText className="w-10 h-10" />

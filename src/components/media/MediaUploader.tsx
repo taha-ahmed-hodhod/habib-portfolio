@@ -1,11 +1,25 @@
-import React, { useRef, useState } from 'react'
-import { Upload, X, RefreshCw, AlertCircle, CheckCircle2, Film, FileText } from 'lucide-react'
+import React, { useRef, useState, useEffect } from 'react'
+import {
+  Upload,
+  X,
+  RefreshCw,
+  AlertCircle,
+  CheckCircle2,
+  Film,
+  FileText,
+  Sparkles,
+  Check,
+} from 'lucide-react'
 import {
   type MediaFolder,
   validateMediaFile,
   uploadMediaFile,
   deleteStorageMedia,
 } from '@/services/storageService'
+import {
+  optimizeImageFile,
+  formatBytes,
+} from '@/lib/imageOptimizer'
 import { Button } from '@/components/ui/Button'
 
 export interface MediaUploaderProps {
@@ -29,6 +43,19 @@ export interface MediaUploaderProps {
   autoDeleteOldOnStorage?: boolean
 }
 
+interface PendingOptimizationReview {
+  file: File
+  previewUrl: string
+  originalSize: number
+  optimizedSize: number
+  savedBytes: number
+  savedPercentage: number
+  wasOptimized: boolean
+  width: number
+  height: number
+  format: string
+}
+
 export const MediaUploader: React.FC<MediaUploaderProps> = ({
   value,
   currentUrl,
@@ -48,48 +75,170 @@ export const MediaUploader: React.FC<MediaUploaderProps> = ({
   const effectiveValue = currentUrl !== undefined ? currentUrl : value
   const fileInputRef = useRef<HTMLInputElement>(null)
   const [isDragging, setIsDragging] = useState(false)
+  const [isOptimizing, setIsOptimizing] = useState(false)
   const [isUploading, setIsUploading] = useState(false)
   const [errorMsg, setErrorMsg] = useState<string | null>(null)
   const [successMsg, setSuccessMsg] = useState<string | null>(null)
+  const [pendingReview, setPendingReview] = useState<PendingOptimizationReview | null>(null)
+  const [optimizationBadge, setOptimizationBadge] = useState<{
+    originalSize: number
+    optimizedSize: number
+    savedPercentage: number
+    wasOptimized: boolean
+  } | null>(null)
+
+  // Revoke object URL on cleanup
+  useEffect(() => {
+    return () => {
+      if (pendingReview?.previewUrl) {
+        URL.revokeObjectURL(pendingReview.previewUrl)
+      }
+    }
+  }, [pendingReview])
 
   const handleFileSelection = async (file: File) => {
     setErrorMsg(null)
     setSuccessMsg(null)
 
-    // 1. Validation
+    // 1. Initial Validation
     const validation = validateMediaFile(file, mediaType, isAr)
     if (!validation.valid) {
       setErrorMsg(validation.error || 'Invalid file')
       return
     }
 
-    if (maxSizeBytes && file.size > maxSizeBytes) {
-      setErrorMsg(
-        isAr
-          ? `حجم الملف يتجاوز الحد المسموح (${Math.round(maxSizeBytes / (1024 * 1024))}MB)`
-          : `File size exceeds the limit (${Math.round(maxSizeBytes / (1024 * 1024))}MB)`
-      )
+    // For non-images (video or document), upload directly with standard flow
+    if (mediaType !== 'image') {
+      if (maxSizeBytes && file.size > maxSizeBytes) {
+        setErrorMsg(
+          isAr
+            ? `حجم الملف يتجاوز الحد المسموح (${Math.round(maxSizeBytes / (1024 * 1024))}MB)`
+            : `File size exceeds the limit (${Math.round(maxSizeBytes / (1024 * 1024))}MB)`
+        )
+        return
+      }
+
+      await executeUpload(file)
       return
     }
 
-    // 2. Upload
+    // 2. High-Quality Image Optimization Flow (WebP, quality 0.90, max 2560px)
+    setIsOptimizing(true)
+    try {
+      const optResult = await optimizeImageFile(file, {
+        quality: 0.90,
+        maxDimension: 2560,
+      })
+
+      // Check max size constraint after optimization
+      if (maxSizeBytes && optResult.optimizedSize > maxSizeBytes) {
+        setErrorMsg(
+          isAr
+            ? `حجم الصورة بعد التحسين (${formatBytes(optResult.optimizedSize)}) يتجاوز الحد المسموح به (${formatBytes(maxSizeBytes)}). يرجى اختيار صورة أخرى.`
+            : `Optimized image size (${formatBytes(optResult.optimizedSize)}) exceeds the limit (${formatBytes(maxSizeBytes)}). Please choose another image.`
+        )
+        return
+      }
+
+      // Create temporary object URL for preview review
+      const localPreviewUrl = URL.createObjectURL(optResult.file)
+
+      // Store in pendingReview for user review before upload
+      setPendingReview({
+        file: optResult.file,
+        previewUrl: localPreviewUrl,
+        originalSize: optResult.originalSize,
+        optimizedSize: optResult.optimizedSize,
+        savedBytes: optResult.savedBytes,
+        savedPercentage: optResult.savedPercentage,
+        wasOptimized: optResult.wasOptimized,
+        width: optResult.width,
+        height: optResult.height,
+        format: optResult.format,
+      })
+    } catch (err: unknown) {
+      console.error('Image optimization error:', err)
+      setErrorMsg(
+        isAr
+          ? 'تعذر تحسين الصورة تلقائياً. تأكد من أن الملف سليم وحاول مرة أخرى.'
+          : 'Could not optimize image. Please verify file integrity and try again.'
+      )
+    } finally {
+      setIsOptimizing(false)
+    }
+  }
+
+  // 3. Confirm and Upload the optimized file to Supabase Storage
+  const handleConfirmUpload = async () => {
+    if (!pendingReview || isUploading) return
+    const reviewData = pendingReview
+    await executeUpload(reviewData.file, reviewData)
+  }
+
+  // Cancel the pending review and discard temporary preview
+  const handleCancelReview = () => {
+    if (pendingReview?.previewUrl) {
+      URL.revokeObjectURL(pendingReview.previewUrl)
+    }
+    setPendingReview(null)
+    if (fileInputRef.current) {
+      fileInputRef.current.value = ''
+    }
+  }
+
+  const executeUpload = async (
+    fileToUpload: File,
+    reviewMeta?: PendingOptimizationReview
+  ) => {
     setIsUploading(true)
+    setErrorMsg(null)
     const oldUrl = effectiveValue
 
     try {
-      const { publicUrl, storagePath } = await uploadMediaFile(file, folder)
+      const { publicUrl, storagePath } = await uploadMediaFile(fileToUpload, folder)
 
       // Notify parent of the new URL and storagePath
       if (onChange) onChange(publicUrl, storagePath)
       if (onUploadComplete) onUploadComplete(publicUrl, storagePath)
 
-      // If autoDeleteOldOnStorage is configured and an old URL exists, clean it up
+      // If autoDeleteOldOnStorage is configured and an old URL exists, clean it up safely
       if (autoDeleteOldOnStorage && oldUrl && oldUrl !== publicUrl) {
         deleteStorageMedia(oldUrl).catch((err) => console.warn('Old file cleanup notice:', err))
       }
 
-      setSuccessMsg(isAr ? 'تم رفع الملف بنجاح!' : 'File uploaded successfully!')
-      setTimeout(() => setSuccessMsg(null), 3500)
+      // Store optimization badge for UI display
+      if (reviewMeta) {
+        setOptimizationBadge({
+          originalSize: reviewMeta.originalSize,
+          optimizedSize: reviewMeta.optimizedSize,
+          savedPercentage: reviewMeta.savedPercentage,
+          wasOptimized: reviewMeta.wasOptimized,
+        })
+
+        if (reviewMeta.wasOptimized) {
+          setSuccessMsg(
+            isAr
+              ? `تم تحسين الصورة ورفعها بنجاح! وفرت ${reviewMeta.savedPercentage}% (${formatBytes(
+                  reviewMeta.originalSize
+                )} ← ${formatBytes(reviewMeta.optimizedSize)})`
+              : `Image optimized & uploaded! Saved ${reviewMeta.savedPercentage}% (${formatBytes(
+                  reviewMeta.originalSize
+                )} → ${formatBytes(reviewMeta.optimizedSize)})`
+          )
+        } else {
+          setSuccessMsg(isAr ? 'تم رفع الصورة بنجاح!' : 'Image uploaded successfully!')
+        }
+      } else {
+        setSuccessMsg(isAr ? 'تم رفع الملف بنجاح!' : 'File uploaded successfully!')
+      }
+
+      // Cleanup pending review
+      if (reviewMeta?.previewUrl) {
+        URL.revokeObjectURL(reviewMeta.previewUrl)
+      }
+      setPendingReview(null)
+
+      setTimeout(() => setSuccessMsg(null), 4500)
     } catch (err: unknown) {
       console.error('Upload error:', err)
       setErrorMsg(
@@ -109,7 +258,6 @@ export const MediaUploader: React.FC<MediaUploaderProps> = ({
     if (file) {
       handleFileSelection(file)
     }
-    // reset input so the same file can be re-selected if needed
     if (fileInputRef.current) {
       fileInputRef.current.value = ''
     }
@@ -118,7 +266,7 @@ export const MediaUploader: React.FC<MediaUploaderProps> = ({
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault()
     e.stopPropagation()
-    if (!disabled && !isUploading) {
+    if (!disabled && !isUploading && !isOptimizing) {
       setIsDragging(true)
     }
   }
@@ -134,7 +282,7 @@ export const MediaUploader: React.FC<MediaUploaderProps> = ({
     e.stopPropagation()
     setIsDragging(false)
 
-    if (disabled || isUploading) return
+    if (disabled || isUploading || isOptimizing) return
 
     const file = e.dataTransfer.files?.[0]
     if (file) {
@@ -143,8 +291,9 @@ export const MediaUploader: React.FC<MediaUploaderProps> = ({
   }
 
   const handleDelete = async () => {
-    if (disabled || isUploading) return
+    if (disabled || isUploading || isOptimizing) return
     const currentUrl = effectiveValue
+    setOptimizationBadge(null)
     if (onChange) onChange(null, null)
     if (onRemove) onRemove()
     if (autoDeleteOldOnStorage && currentUrl) {
@@ -157,7 +306,7 @@ export const MediaUploader: React.FC<MediaUploaderProps> = ({
       ? 'video/mp4,video/webm'
       : mediaType === 'document'
       ? 'application/pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,text/plain'
-      : 'image/jpeg,image/png,image/webp'
+      : 'image/jpeg,image/png,image/webp,image/gif,image/jfif,image/svg+xml'
 
   return (
     <div className={`space-y-2 ${className}`}>
@@ -174,12 +323,104 @@ export const MediaUploader: React.FC<MediaUploaderProps> = ({
         accept={acceptedTypes}
         onChange={handleInputChange}
         className="hidden"
-        disabled={disabled || isUploading}
+        disabled={disabled || isUploading || isOptimizing}
       />
 
-      {/* Upload Box / Preview Area */}
-      {effectiveValue ? (
-        /* Preview with Action Controls */
+      {/* 1. Review Modal / In-line Review Card for Optimized Image */}
+      {pendingReview ? (
+        <div className="relative rounded-2xl border border-[#8B5CF6]/40 bg-[#0E0E0E] p-3.5 overflow-hidden shadow-lg shadow-purple-900/10 animate-in fade-in zoom-in-95 duration-200">
+          <div className="flex items-center justify-between pb-2 mb-2 border-b border-[#1F1F1F]">
+            <span className="flex items-center gap-1.5 text-xs font-semibold text-[#A78BFA]">
+              <Sparkles className="w-4 h-4 text-[#8B5CF6]" />
+              {isAr ? 'معاينة النسخة المُحسّنة قبل الرفع' : 'Review Optimized Image Before Upload'}
+            </span>
+            <span className="text-[11px] font-mono text-[#888]">
+              {pendingReview.width > 0 && `${pendingReview.width} × ${pendingReview.height} px`}
+            </span>
+          </div>
+
+          <div className="relative aspect-video sm:aspect-[16/9] w-full rounded-xl overflow-hidden bg-black flex items-center justify-center border border-[#1C1C1C]">
+            <img
+              src={pendingReview.previewUrl}
+              alt="Optimized preview"
+              className="w-full h-full object-contain"
+            />
+
+            {/* Savings Badge on Image */}
+            <div className="absolute top-2.5 start-2.5">
+              {pendingReview.wasOptimized ? (
+                <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 backdrop-blur-md shadow-sm">
+                  <Check className="w-3 h-3" />
+                  {isAr
+                    ? `وفرت ${pendingReview.savedPercentage}% مساحة`
+                    : `Saved ${pendingReview.savedPercentage}%`}
+                </span>
+              ) : (
+                <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[11px] font-medium bg-[#1F1F1F]/80 text-[#B3B3B3] border border-[#333] backdrop-blur-md">
+                  {isAr ? 'الحجم الأصلي الأمثل' : 'Optimal Original Size'}
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/* Size Comparison Bar */}
+          <div className="mt-3 p-2.5 rounded-xl bg-[#141414] border border-[#222] flex flex-wrap items-center justify-between gap-2 text-xs">
+            <div className="flex items-center gap-2">
+              <span className="text-[#777]">
+                {isAr ? 'الأصلي:' : 'Original:'}{' '}
+                <span className="line-through text-[#999]">{formatBytes(pendingReview.originalSize)}</span>
+              </span>
+              <span className="text-[#555]">→</span>
+              <span className="font-semibold text-white">
+                {isAr ? 'المُحسّن:' : 'Optimized:'}{' '}
+                <span className="text-[#A78BFA]">{formatBytes(pendingReview.optimizedSize)}</span>
+              </span>
+            </div>
+
+            <span className="text-[11px] text-[#777] font-mono">
+              WebP • 90% {isAr ? 'جودة فائقة' : 'High Fidelity'}
+            </span>
+          </div>
+
+          {/* Action Buttons */}
+          <div className="mt-3 flex items-center justify-end gap-2 pt-2 border-t border-[#1C1C1C]">
+            <Button
+              type="button"
+              variant="outline"
+              size="sm"
+              onClick={handleCancelReview}
+              disabled={isUploading}
+              icon={<X className="w-3.5 h-3.5" />}
+            >
+              {isAr ? 'إلغاء' : 'Cancel'}
+            </Button>
+
+            <Button
+              type="button"
+              variant="primary"
+              size="sm"
+              onClick={handleConfirmUpload}
+              disabled={isUploading}
+              icon={
+                isUploading ? (
+                  <div className="w-3.5 h-3.5 border-2 border-white border-t-transparent rounded-full animate-spin" />
+                ) : (
+                  <Upload className="w-3.5 h-3.5" />
+                )
+              }
+            >
+              {isUploading
+                ? isAr
+                  ? 'جاري الرفع...'
+                  : 'Uploading...'
+                : isAr
+                ? 'تأكيد ورفع الصورة'
+                : 'Confirm & Upload'}
+            </Button>
+          </div>
+        </div>
+      ) : effectiveValue ? (
+        /* 2. Uploaded Media Preview with Action Controls */
         <div className="relative rounded-2xl border border-[#262626] bg-[#0E0E0E] p-3 overflow-hidden group">
           <div className="relative aspect-video sm:aspect-[16/9] w-full rounded-xl overflow-hidden bg-black flex items-center justify-center">
             {mediaType === 'video' ? (
@@ -201,11 +442,25 @@ export const MediaUploader: React.FC<MediaUploaderProps> = ({
                 </span>
               </div>
             ) : (
-              <img
-                src={effectiveValue}
-                alt="Preview"
-                className="w-full h-full object-contain"
-              />
+              <>
+                <img
+                  src={effectiveValue}
+                  alt="Preview"
+                  className="w-full h-full object-contain"
+                />
+
+                {/* Optimization Badge on Uploaded Image */}
+                {optimizationBadge?.wasOptimized && (
+                  <div className="absolute top-2.5 start-2.5">
+                    <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-semibold bg-purple-900/40 text-[#A78BFA] border border-[#8B5CF6]/30 backdrop-blur-md shadow-sm">
+                      <Sparkles className="w-3 h-3 text-[#8B5CF6]" />
+                      {isAr
+                        ? `WebP • وفرت ${optimizationBadge.savedPercentage}%`
+                        : `WebP • Saved ${optimizationBadge.savedPercentage}%`}
+                    </span>
+                  </div>
+                )}
+              </>
             )}
           </div>
 
@@ -221,7 +476,7 @@ export const MediaUploader: React.FC<MediaUploaderProps> = ({
                 variant="outline"
                 size="sm"
                 onClick={() => fileInputRef.current?.click()}
-                disabled={disabled || isUploading}
+                disabled={disabled || isUploading || isOptimizing}
                 icon={<RefreshCw className="w-3.5 h-3.5 text-[#8B5CF6]" />}
               >
                 {isAr ? 'استبدال' : 'Replace'}
@@ -231,7 +486,7 @@ export const MediaUploader: React.FC<MediaUploaderProps> = ({
                 variant="danger"
                 size="sm"
                 onClick={handleDelete}
-                disabled={disabled || isUploading}
+                disabled={disabled || isUploading || isOptimizing}
                 icon={<X className="w-3.5 h-3.5" />}
               >
                 {isAr ? 'حذف' : 'Delete'}
@@ -240,19 +495,38 @@ export const MediaUploader: React.FC<MediaUploaderProps> = ({
           </div>
         </div>
       ) : (
-        /* Empty / Drag & Drop Upload Zone */
+        /* 3. Empty / Drag & Drop Upload Zone */
         <div
           onDragOver={handleDragOver}
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
-          onClick={() => !disabled && !isUploading && fileInputRef.current?.click()}
+          onClick={() =>
+            !disabled && !isUploading && !isOptimizing && fileInputRef.current?.click()
+          }
           className={`relative cursor-pointer rounded-2xl border-2 border-dashed p-6 text-center transition-all duration-300 flex flex-col items-center justify-center min-h-[160px] ${
             isDragging
               ? 'border-[#8B5CF6] bg-[#8B5CF6]/10 scale-[1.01]'
               : 'border-[#262626] bg-[#0C0C0C] hover:border-[#383838] hover:bg-[#121212]'
-          } ${disabled || isUploading ? 'opacity-60 cursor-not-allowed' : ''}`}
+          } ${disabled || isUploading || isOptimizing ? 'opacity-60 cursor-not-allowed' : ''}`}
         >
-          {isUploading ? (
+          {isOptimizing ? (
+            <div className="flex flex-col items-center gap-3">
+              <div className="relative">
+                <div className="w-9 h-9 rounded-full border-2 border-[#8B5CF6] border-t-transparent animate-spin" />
+                <Sparkles className="w-4 h-4 text-[#A78BFA] absolute inset-0 m-auto animate-pulse" />
+              </div>
+              <span className="text-xs font-semibold text-[#A78BFA]">
+                {isAr
+                  ? 'جاري فحص وتحسين جودة الصورة بالمتصفح...'
+                  : 'Optimizing image fidelity with WebP...'}
+              </span>
+              <span className="text-[10px] text-[#777]">
+                {isAr
+                  ? 'يتم تقليل الحجم دون فقدان الوضوح'
+                  : 'Compressing file size while preserving high visual quality'}
+              </span>
+            </div>
+          ) : isUploading ? (
             <div className="flex flex-col items-center gap-3">
               <div className="w-8 h-8 rounded-full border-2 border-[#8B5CF6] border-t-transparent animate-spin" />
               <span className="text-xs font-semibold text-[#8B5CF6]">
@@ -289,8 +563,8 @@ export const MediaUploader: React.FC<MediaUploaderProps> = ({
                         ? 'مستندات PDF أو Word أو Excel (حتى 30MB)'
                         : 'PDF, Word, or Excel documents (up to 30MB)'
                       : isAr
-                      ? 'صور PNG أو JPG أو WebP (حتى 10MB)'
-                      : 'PNG, JPG, or WebP images (up to 10MB)')}
+                      ? 'صور PNG أو JPG أو WebP (يتم تحسينها وضغطها تلقائياً)'
+                      : 'PNG, JPG, or WebP images (automatically optimized with WebP)')}
                 </p>
               </div>
             </>
@@ -315,3 +589,4 @@ export const MediaUploader: React.FC<MediaUploaderProps> = ({
     </div>
   )
 }
+

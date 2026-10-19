@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Trash2, Edit2, Film, Image as ImageIcon, Star, AlertCircle, FileText } from 'lucide-react'
+import { Plus, Trash2, Edit2, Film, Image as ImageIcon, Star, AlertCircle, FileText, Play, Upload, Sliders } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import type { Work, Category, Client } from '@/types/database'
 import { Card } from '@/components/ui/Card'
@@ -9,6 +9,14 @@ import { Badge } from '@/components/ui/Badge'
 import { MediaUploader } from '@/components/media/MediaUploader'
 import { deleteStorageMedia } from '@/services/storageService'
 import { dataSync } from '@/services/dataSync'
+import {
+  isYouTubeUrl,
+  getYouTubeEmbedUrl,
+  getYouTubeThumbnailUrl,
+  parseVideoUrl,
+  buildVideoUrl,
+  type VideoPlaybackSettings,
+} from '@/lib/youtube'
 
 export const WorksManagerPage: React.FC = () => {
   const { i18n } = useTranslation()
@@ -24,6 +32,18 @@ export const WorksManagerPage: React.FC = () => {
   const [editingWork, setEditingWork] = useState<Partial<Work> | null>(null)
   const [originalMediaUrl, setOriginalMediaUrl] = useState<string | null>(null)
   const [originalThumbnailUrl, setOriginalThumbnailUrl] = useState<string | null>(null)
+
+  // YouTube and Video Playback state
+  const [videoSource, setVideoSource] = useState<'upload' | 'youtube'>('upload')
+  const [youtubeUrlInput, setYoutubeUrlInput] = useState('')
+  const [youtubeError, setYoutubeError] = useState<string | null>(null)
+  const [playbackSettings, setPlaybackSettings] = useState<VideoPlaybackSettings>({
+    autoplay: false,
+    mute: false,
+    loop: false,
+    controls: true,
+    start: 0,
+  })
 
   const fetchData = async () => {
     try {
@@ -51,11 +71,65 @@ export const WorksManagerPage: React.FC = () => {
     fetchData()
   }, [])
 
+  const handleOpenAddModal = () => {
+    setEditingWork({
+      media_type: 'video',
+      is_visible: true,
+      is_featured: false,
+      sort_order: works.length + 1,
+    })
+    setVideoSource('upload')
+    setYoutubeUrlInput('')
+    setYoutubeError(null)
+    setPlaybackSettings({
+      autoplay: false,
+      mute: false,
+      loop: false,
+      controls: true,
+      start: 0,
+    })
+    setOriginalMediaUrl(null)
+    setOriginalThumbnailUrl(null)
+    setErrorMessage(null)
+    setShowModal(true)
+  }
+
+  const handleOpenEditModal = (w: Work) => {
+    setEditingWork(w)
+    setOriginalMediaUrl(w.media_url || null)
+    setOriginalThumbnailUrl(w.thumbnail_url || null)
+
+    const parsed = parseVideoUrl(w.media_url)
+    setPlaybackSettings(parsed.settings)
+
+    if (w.media_type === 'video' && parsed.isYouTube) {
+      setVideoSource('youtube')
+      setYoutubeUrlInput(parsed.cleanUrl)
+      setYoutubeError(null)
+    } else {
+      setVideoSource('upload')
+      setYoutubeUrlInput('')
+      setYoutubeError(null)
+    }
+    setErrorMessage(null)
+    setShowModal(true)
+  }
+
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!editingWork) return
 
-    if (!editingWork.media_url) {
+    // Validate YouTube URL if video source is YouTube
+    if (editingWork.media_type === 'video' && videoSource === 'youtube') {
+      if (!editingWork.media_url || !isYouTubeUrl(editingWork.media_url)) {
+        setErrorMessage(
+          isAr
+            ? 'يرجى إدخال رابط YouTube صالح (مثل: youtube.com/watch?v=... أو youtu.be/...)'
+            : 'Please enter a valid YouTube URL (e.g. youtube.com/watch?v=... or youtu.be/...)'
+        )
+        return
+      }
+    } else if (!editingWork.media_url) {
       setErrorMessage(isAr ? 'يرجى رفع ملف الوسائط (فيديو أو صورة أو مستند)' : 'Please upload a media file (video, image, or document)')
       return
     }
@@ -63,14 +137,26 @@ export const WorksManagerPage: React.FC = () => {
     setSaving(true)
     setErrorMessage(null)
 
+    // Build final media_url including playback settings for video media
+    let finalMediaUrl = editingWork.media_url || ''
+    if (editingWork.media_type === 'video' && finalMediaUrl) {
+      finalMediaUrl = buildVideoUrl(finalMediaUrl, playbackSettings)
+    }
+
+    // Automatically fall back to YouTube thumbnail if user didn't upload a custom thumbnail for YouTube video
+    const fallbackThumb =
+      editingWork.media_type === 'video' && isYouTubeUrl(finalMediaUrl)
+        ? getYouTubeThumbnailUrl(finalMediaUrl, 'hq')
+        : (editingWork.media_type === 'image' ? finalMediaUrl : null)
+
     const payload = {
       title_ar: editingWork.title_ar,
       title_en: editingWork.title_en || editingWork.title_ar,
       description_ar: editingWork.description_ar,
       description_en: editingWork.description_en,
       media_type: editingWork.media_type || 'video',
-      media_url: editingWork.media_url,
-      thumbnail_url: editingWork.thumbnail_url || (editingWork.media_type === 'image' ? editingWork.media_url : null),
+      media_url: finalMediaUrl,
+      thumbnail_url: editingWork.thumbnail_url || fallbackThumb,
       category_id: editingWork.category_id || null,
       client_id: editingWork.client_id || null,
       project_url: editingWork.project_url,
@@ -94,11 +180,11 @@ export const WorksManagerPage: React.FC = () => {
         throw new Error(resultError.message)
       }
 
-      // Safe media cleanup: only delete old storage files after database confirms success
-      if (originalMediaUrl && originalMediaUrl !== editingWork.media_url) {
+      // Safe media cleanup: only delete old storage files if not YouTube and not matching new url
+      if (originalMediaUrl && !isYouTubeUrl(originalMediaUrl) && originalMediaUrl !== editingWork.media_url) {
         await deleteStorageMedia(originalMediaUrl)
       }
-      if (originalThumbnailUrl && originalThumbnailUrl !== editingWork.thumbnail_url) {
+      if (originalThumbnailUrl && !isYouTubeUrl(originalThumbnailUrl) && originalThumbnailUrl !== editingWork.thumbnail_url) {
         await deleteStorageMedia(originalThumbnailUrl)
       }
 
@@ -107,6 +193,8 @@ export const WorksManagerPage: React.FC = () => {
       setEditingWork(null)
       setOriginalMediaUrl(null)
       setOriginalThumbnailUrl(null)
+      setYoutubeUrlInput('')
+      setYoutubeError(null)
       fetchData()
     } catch (err: unknown) {
       const message = err instanceof Error ? err.message : 'Failed to save work'
@@ -148,18 +236,7 @@ export const WorksManagerPage: React.FC = () => {
           variant="primary"
           size="sm"
           icon={<Plus className="w-4 h-4" />}
-          onClick={() => {
-            setEditingWork({
-              title_ar: '',
-              title_en: '',
-              media_type: 'video',
-              media_url: '',
-              is_featured: true,
-              is_visible: true,
-              sort_order: works.length + 1,
-            })
-            setShowModal(true)
-          }}
+          onClick={handleOpenAddModal}
         >
           {isAr ? 'إضافة عمل جديد' : 'New Work'}
         </Button>
@@ -236,12 +313,7 @@ export const WorksManagerPage: React.FC = () => {
 
                 <div className="flex items-center gap-2">
                   <button
-                    onClick={() => {
-                      setEditingWork(w)
-                      setOriginalMediaUrl(w.media_url || null)
-                      setOriginalThumbnailUrl(w.thumbnail_url || null)
-                      setShowModal(true)
-                    }}
+                    onClick={() => handleOpenEditModal(w)}
                     className="p-1.5 rounded-lg text-[#9B9B9B] hover:text-white hover:bg-[#1A1A1A]"
                   >
                     <Edit2 className="w-4 h-4" />
@@ -361,27 +433,295 @@ export const WorksManagerPage: React.FC = () => {
 
               {/* Media File Upload (Video, Document, or Image) */}
               {editingWork.media_type === 'video' ? (
-                <>
-                  <MediaUploader
-                    label={isAr ? 'ملف الفيديو (MP4, WebM)' : 'Video File (MP4, WebM)'}
-                    folder="works/videos"
-                    mediaType="video"
-                    maxSizeBytes={100 * 1024 * 1024}
-                    currentUrl={editingWork.media_url || undefined}
-                    onUploadComplete={(url) => setEditingWork({ ...editingWork, media_url: url })}
-                    onRemove={() => setEditingWork({ ...editingWork, media_url: '' })}
-                  />
+                <div className="space-y-4">
+                  {/* Video Source Switcher */}
+                  <div>
+                    <label className="block text-xs font-medium text-[#B3B3B3] mb-2">
+                      {isAr ? 'مصدر الفيديو' : 'Video Source'}
+                    </label>
+                    <div className="grid grid-cols-2 gap-2 bg-[#121212] p-1 rounded-xl border border-[#262626]">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setVideoSource('upload')
+                          setEditingWork((prev) => ({
+                            ...prev,
+                            media_url: isYouTubeUrl(prev?.media_url || '') ? '' : prev?.media_url,
+                          }))
+                        }}
+                        className={`flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-medium transition-all ${
+                          videoSource === 'upload'
+                            ? 'bg-[#8B5CF6] text-white shadow-sm'
+                            : 'text-[#9B9B9B] hover:text-white'
+                        }`}
+                      >
+                        <Upload className="w-3.5 h-3.5" />
+                        {isAr ? 'رفع ملف فيديو' : 'Upload Video File'}
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setVideoSource('youtube')
+                          const initialUrl = isYouTubeUrl(editingWork.media_url || '')
+                            ? editingWork.media_url || ''
+                            : youtubeUrlInput
+                          setEditingWork((prev) => ({
+                            ...prev,
+                            media_url: initialUrl,
+                          }))
+                        }}
+                        className={`flex items-center justify-center gap-2 py-2 rounded-lg text-xs font-medium transition-all ${
+                          videoSource === 'youtube'
+                            ? 'bg-[#8B5CF6] text-white shadow-sm'
+                            : 'text-[#9B9B9B] hover:text-white'
+                        }`}
+                      >
+                        <Play className="w-3.5 h-3.5" />
+                        YouTube
+                      </button>
+                    </div>
+                  </div>
 
-                  <MediaUploader
-                    label={isAr ? 'الصورة المصغرة للغلاف (Thumbnail Poster)' : 'Video Thumbnail (Poster Image)'}
-                    folder="works/thumbnails"
-                    mediaType="image"
-                    maxSizeBytes={10 * 1024 * 1024}
-                    currentUrl={editingWork.thumbnail_url || undefined}
-                    onUploadComplete={(url) => setEditingWork({ ...editingWork, thumbnail_url: url })}
-                    onRemove={() => setEditingWork({ ...editingWork, thumbnail_url: '' })}
-                  />
-                </>
+                  {videoSource === 'upload' ? (
+                    <>
+                      <MediaUploader
+                        label={isAr ? 'ملف الفيديو (MP4, WebM)' : 'Video File (MP4, WebM)'}
+                        folder="works/videos"
+                        mediaType="video"
+                        maxSizeBytes={100 * 1024 * 1024}
+                        currentUrl={editingWork.media_url || undefined}
+                        onUploadComplete={(url) => setEditingWork({ ...editingWork, media_url: url })}
+                        onRemove={() => setEditingWork({ ...editingWork, media_url: '' })}
+                      />
+
+                      <MediaUploader
+                        label={isAr ? 'الصورة المصغرة للغلاف (Thumbnail Poster)' : 'Video Thumbnail (Poster Image)'}
+                        folder="works/thumbnails"
+                        mediaType="image"
+                        maxSizeBytes={10 * 1024 * 1024}
+                        currentUrl={editingWork.thumbnail_url || undefined}
+                        onUploadComplete={(url) => setEditingWork({ ...editingWork, thumbnail_url: url })}
+                        onRemove={() => setEditingWork({ ...editingWork, thumbnail_url: '' })}
+                      />
+                    </>
+                  ) : (
+                    <div className="space-y-3">
+                      <div>
+                        <label className="block text-xs font-medium text-[#B3B3B3] mb-1">
+                          {isAr ? 'رابط فيديو YouTube' : 'YouTube Video URL'}
+                        </label>
+                        <input
+                          type="url"
+                          placeholder="https://www.youtube.com/watch?v=... or https://youtu.be/..."
+                          value={youtubeUrlInput}
+                          onChange={(e) => {
+                            const val = e.target.value
+                            setYoutubeUrlInput(val)
+                            if (!val.trim()) {
+                              setYoutubeError(null)
+                              setEditingWork((prev) => ({ ...prev, media_url: '' }))
+                            } else if (isYouTubeUrl(val.trim())) {
+                              setYoutubeError(null)
+                              const parsed = parseVideoUrl(val.trim())
+                              if (parsed.settings.start && parsed.settings.start > 0) {
+                                setPlaybackSettings((prev) => ({ ...prev, start: parsed.settings.start }))
+                              }
+                              setEditingWork((prev) => ({ ...prev, media_url: val.trim() }))
+                            } else {
+                              setYoutubeError(
+                                isAr
+                                  ? 'صيغة الرابط غير صحيحة. أمثلة مدعومة: youtube.com/watch?v=... أو youtu.be/...'
+                                  : 'Invalid YouTube URL. Supported formats: youtube.com/watch?v=... or youtu.be/...'
+                              )
+                              setEditingWork((prev) => ({ ...prev, media_url: '' }))
+                            }
+                          }}
+                          className={`w-full bg-[#121212] border ${
+                            youtubeError ? 'border-red-500/50 focus:border-red-500' : 'border-[#262626] focus:border-[#8B5CF6]'
+                          } rounded-xl px-4 py-2.5 text-sm text-white placeholder-[#555] focus:outline-none transition-colors`}
+                          dir="ltr"
+                        />
+                        {youtubeError && (
+                          <p className="text-xs text-red-400 mt-1">{youtubeError}</p>
+                        )}
+                        <p className="text-[11px] text-[#666] mt-1">
+                          {isAr
+                            ? 'يدعم روابط watch?v= و youtu.be و shorts/ و embed/'
+                            : 'Supports watch?v=, youtu.be, shorts/, and embed/ URLs'}
+                        </p>
+                      </div>
+
+                      {/* Live Preview */}
+                      {isYouTubeUrl(youtubeUrlInput.trim()) && (
+                        <div className="rounded-xl overflow-hidden border border-[#262626] bg-[#050505] p-3 space-y-2">
+                          <div className="flex items-center justify-between text-xs text-[#9B9B9B]">
+                            <span className="flex items-center gap-1.5 font-medium text-[#F5F5F5]">
+                              <Play className="w-3.5 h-3.5 text-[#8B5CF6]" />
+                              {isAr ? 'معاينة مباشرة من YouTube' : 'Live YouTube Preview'}
+                            </span>
+                            <span className="text-[10px] text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+                              {isAr ? 'رابط صالح' : 'Valid URL'}
+                            </span>
+                          </div>
+                          <div className="relative aspect-video w-full rounded-lg overflow-hidden bg-black border border-[#1a1a1a]">
+                            <iframe
+                              key={`${youtubeUrlInput}-${playbackSettings.autoplay}-${playbackSettings.mute}-${playbackSettings.loop}-${playbackSettings.controls}-${playbackSettings.start}`}
+                              src={getYouTubeEmbedUrl(youtubeUrlInput.trim(), playbackSettings) || undefined}
+                              title="YouTube Live Preview"
+                              className="w-full h-full border-0"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Optional Custom Thumbnail Poster */}
+                      <MediaUploader
+                        label={
+                          isAr
+                            ? 'الصورة المصغرة للغلاف (اختياري - يتم استخدام صورة YouTube تلقائياً في حال عدم الرفع)'
+                            : 'Cover Thumbnail (Optional - defaults to YouTube cover if not provided)'
+                        }
+                        folder="works/thumbnails"
+                        mediaType="image"
+                        maxSizeBytes={10 * 1024 * 1024}
+                        currentUrl={editingWork.thumbnail_url || undefined}
+                        onUploadComplete={(url) => setEditingWork((prev) => ({ ...prev, thumbnail_url: url }))}
+                        onRemove={() => setEditingWork((prev) => ({ ...prev, thumbnail_url: '' }))}
+                      />
+                    </div>
+                  )}
+
+                  {/* Video Playback Settings Section */}
+                  <div className="rounded-2xl border border-[#242424] bg-[#0D0D0D] p-4 space-y-3.5 mt-2">
+                    <div className="flex items-center justify-between pb-2.5 border-b border-[#1F1F1F]">
+                      <span className="text-xs font-bold text-[#F5F5F5] flex items-center gap-2">
+                        <Sliders className="w-3.5 h-3.5 text-[#8B5CF6]" />
+                        {isAr ? 'إعدادات تشغيل الفيديو' : 'Video Playback Settings'}
+                      </span>
+                      <span className="text-[10px] text-[#777]">
+                        {videoSource === 'youtube'
+                          ? (isAr ? 'مشغل YouTube المدمج' : 'Embedded YouTube Player')
+                          : (isAr ? 'المشغل السينمائي المخصص' : 'Custom Cinematic Player')}
+                      </span>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+                      {/* Autoplay */}
+                      <label className="flex items-start justify-between gap-3 p-2.5 rounded-xl bg-[#141414] border border-[#222] cursor-pointer hover:border-[#333] transition-colors">
+                        <div className="space-y-0.5">
+                          <span className="font-medium text-white block">
+                            {isAr ? 'تشغيل تلقائي' : 'Autoplay'}
+                          </span>
+                          <span className="text-[10px] text-[#777] block">
+                            {isAr
+                              ? 'المتصفح يتطلب كتم الصوت تلقائياً للبدء'
+                              : 'Browsers require muted audio for autoplay'}
+                          </span>
+                        </div>
+                        <input
+                          type="checkbox"
+                          checked={playbackSettings.autoplay ?? false}
+                          onChange={(e) => {
+                            const val = e.target.checked
+                            setPlaybackSettings((prev) => ({
+                              ...prev,
+                              autoplay: val,
+                              mute: val ? true : prev.mute,
+                            }))
+                          }}
+                          className="mt-1 w-4 h-4 rounded accent-[#8B5CF6] cursor-pointer"
+                        />
+                      </label>
+
+                      {/* Mute by default */}
+                      <label className="flex items-start justify-between gap-3 p-2.5 rounded-xl bg-[#141414] border border-[#222] cursor-pointer hover:border-[#333] transition-colors">
+                        <div className="space-y-0.5">
+                          <span className="font-medium text-white block">
+                            {isAr ? 'كتم الصوت افتراضياً' : 'Mute by Default'}
+                          </span>
+                          <span className="text-[10px] text-[#777] block">
+                            {isAr ? 'يبدأ الفيديو بمستوى صوت مكتوم' : 'Initializes video in muted state'}
+                          </span>
+                        </div>
+                        <input
+                          type="checkbox"
+                          checked={playbackSettings.mute ?? false}
+                          onChange={(e) =>
+                            setPlaybackSettings((prev) => ({ ...prev, mute: e.target.checked }))
+                          }
+                          className="mt-1 w-4 h-4 rounded accent-[#8B5CF6] cursor-pointer"
+                        />
+                      </label>
+
+                      {/* Loop */}
+                      <label className="flex items-start justify-between gap-3 p-2.5 rounded-xl bg-[#141414] border border-[#222] cursor-pointer hover:border-[#333] transition-colors">
+                        <div className="space-y-0.5">
+                          <span className="font-medium text-white block">
+                            {isAr ? 'تكرار التشغيل (Loop)' : 'Loop Playback'}
+                          </span>
+                          <span className="text-[10px] text-[#777] block">
+                            {isAr ? 'إعادة تشغيل الفيديو فور انتهائه' : 'Repeats video continuously'}
+                          </span>
+                        </div>
+                        <input
+                          type="checkbox"
+                          checked={playbackSettings.loop ?? false}
+                          onChange={(e) =>
+                            setPlaybackSettings((prev) => ({ ...prev, loop: e.target.checked }))
+                          }
+                          className="mt-1 w-4 h-4 rounded accent-[#8B5CF6] cursor-pointer"
+                        />
+                      </label>
+
+                      {/* Player Controls */}
+                      <label className="flex items-start justify-between gap-3 p-2.5 rounded-xl bg-[#141414] border border-[#222] cursor-pointer hover:border-[#333] transition-colors">
+                        <div className="space-y-0.5">
+                          <span className="font-medium text-white block">
+                            {isAr ? 'عناصر التحكم' : 'Player Controls'}
+                          </span>
+                          <span className="text-[10px] text-[#777] block">
+                            {isAr ? 'إظهار شريط وأزرار التحكم' : 'Display player control bar'}
+                          </span>
+                        </div>
+                        <input
+                          type="checkbox"
+                          checked={playbackSettings.controls ?? true}
+                          onChange={(e) =>
+                            setPlaybackSettings((prev) => ({ ...prev, controls: e.target.checked }))
+                          }
+                          className="mt-1 w-4 h-4 rounded accent-[#8B5CF6] cursor-pointer"
+                        />
+                      </label>
+                    </div>
+
+                    {/* Start Time */}
+                    <div className="pt-1">
+                      <label className="block text-xs font-medium text-[#B3B3B3] mb-1">
+                        {isAr ? 'وقت البدء (بالثواني)' : 'Start Time (in seconds)'}
+                      </label>
+                      <input
+                        type="number"
+                        min="0"
+                        step="1"
+                        placeholder="0"
+                        value={playbackSettings.start || ''}
+                        onChange={(e) => {
+                          const val = e.target.value === '' ? 0 : Math.max(0, parseInt(e.target.value, 10) || 0)
+                          setPlaybackSettings((prev) => ({ ...prev, start: val }))
+                        }}
+                        className="w-full bg-[#121212] border border-[#262626] focus:border-[#8B5CF6] rounded-xl px-4 py-2 text-xs text-white focus:outline-none transition-colors"
+                        dir="ltr"
+                      />
+                      <p className="text-[10px] text-[#666] mt-1">
+                        {isAr
+                          ? 'يبدأ تشغيل الفيديو من هذه الثانية المحددة (اتركه فارغاً أو 0 للبدء من البداية)'
+                          : 'Starts playback at the specified second (leave empty or 0 to start from the beginning)'}
+                      </p>
+                    </div>
+                  </div>
+                </div>
               ) : editingWork.media_type === 'document' ? (
                 <>
                   <MediaUploader

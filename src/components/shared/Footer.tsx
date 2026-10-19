@@ -15,8 +15,8 @@ export const Footer: React.FC = () => {
         <div className="flex flex-col md:flex-row items-center justify-between gap-8 text-center md:text-start">
           {/* Brand Info */}
           <div className="flex flex-col items-center md:items-start gap-2">
-            <h3 className="text-xl font-bold text-[#F5F5F5] tracking-tight">
-              Habib AL-Rahman
+            <h3 className="text-xl font-bold tracking-tight">
+              <span className="gradient-name">Habib AL-Rahman</span>
             </h3>
             <p className="text-sm text-[#9B9B9B] max-w-sm">
               {isAr
