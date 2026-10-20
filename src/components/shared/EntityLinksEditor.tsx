@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Plus, Trash2, Link2, Globe, Eye, EyeOff, MessageCircle } from 'lucide-react'
+import { Plus, Trash2, Link2, Globe, Eye, EyeOff } from 'lucide-react'
 import type { SocialLink } from '@/types/database'
 import { Button } from '@/components/ui/Button'
 import {
@@ -7,6 +7,7 @@ import {
   InstagramIcon,
   FacebookIcon,
   TikTokIcon,
+  WhatsAppIcon,
 } from '@/components/ui/Icons'
 
 const YoutubeSvg: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' }) => (
@@ -52,12 +53,13 @@ export const renderPlatformIcon = (platformOrIcon?: string | null) => {
   const p = (platformOrIcon || '').toLowerCase()
   if (p.includes('instagram')) return <InstagramIcon className="w-4 h-4" />
   if (p.includes('tiktok')) return <TikTokIcon className="w-4 h-4" />
-  if (p.includes('youtube')) return <YoutubeSvg className="w-4 h-4 text-red-500" />
+  if (p.includes('youtube')) return <YoutubeSvg className="w-4 h-4 " />
   if (p.includes('facebook')) return <FacebookIcon className="w-4 h-4" />
   if (p.includes('linkedin')) return <LinkedinIcon className="w-4 h-4" />
   if (p.includes('twitter') || p.includes('x')) return <TwitterSvg className="w-4 h-4" />
-  if (p.includes('behance')) return <BehanceSvg className="w-4 h-4 text-[#0057ff]" />
-  if (p.includes('whatsapp') || p.includes('wa.me')) return <MessageCircle className="w-4 h-4 text-green-500" />
+  if (p.includes('behance')) return <BehanceSvg className="w-4 h-4 " />
+  if (p.includes('whatsapp') || p.includes('wa.me') || p.includes('واتساب'))
+    return <WhatsAppIcon className="w-4 h-4 " />
   if (p.includes('web') || p.includes('site')) return <Globe className="w-4 h-4" />
   return <Link2 className="w-4 h-4" />
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Trash2, Edit2, Film, Image as ImageIcon, Star, AlertCircle, FileText, Play, Upload, Sliders } from 'lucide-react'
+import { Plus, Trash2, Edit2, Image as ImageIcon, Star, AlertCircle, FileText, Play, Upload, Sliders } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
 import type { Work, Category, Client } from '@/types/database'
 import { Card } from '@/components/ui/Card'
@@ -262,17 +262,27 @@ export const WorksManagerPage: React.FC = () => {
               <div className="relative aspect-video bg-[#121212] overflow-hidden">
                 {w.thumbnail_url ? (
                   <img src={w.thumbnail_url} alt={w.title_ar} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center text-[#444]">
-                  {w.media_type === 'video' ? (
-                    <Film className="w-8 h-8" />
-                  ) : w.media_type === 'document' ? (
-                    <FileText className="w-8 h-8 text-[#38BDF8]" />
+                ) : w.media_type === 'video' ? (
+                  isYouTubeUrl(w.media_url) && getYouTubeThumbnailUrl(w.media_url) ? (
+                    <img src={getYouTubeThumbnailUrl(w.media_url)!} alt={w.title_ar} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                   ) : (
-                    <ImageIcon className="w-8 h-8" />
-                  )}
-                </div>
-              )}
+                    <video
+                      src={`${w.media_url}#t=0.001`}
+                      preload="metadata"
+                      muted
+                      playsInline
+                      className="w-full h-full object-cover pointer-events-none"
+                    />
+                  )
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center text-[#444]">
+                    {w.media_type === 'document' ? (
+                      <FileText className="w-8 h-8 text-[#38BDF8]" />
+                    ) : (
+                      <ImageIcon className="w-8 h-8" />
+                    )}
+                  </div>
+                )}
 
               <div className="absolute top-2 left-2 flex items-center gap-1.5">
                 <Badge variant="accent" className="bg-black/70 backdrop-blur-sm text-[10px]">

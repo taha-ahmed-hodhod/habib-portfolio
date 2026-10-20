@@ -3,9 +3,11 @@ import { Link, useLocation } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import { Globe, Menu, X, ArrowUpRight } from 'lucide-react'
 import { Button } from '@/components/ui/Button'
+import { useProfile } from '@/hooks/useProfile'
 
 export const Navbar: React.FC = () => {
   const { t, i18n } = useTranslation()
+  const { profile } = useProfile()
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
   const location = useLocation()
   const isDashboard = location.pathname.startsWith('/dashboard')
@@ -30,9 +32,17 @@ export const Navbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-4">
         {/* Brand Logo */}
         <Link to="/" className="flex items-center gap-2.5 sm:gap-3 group shrink-0">
-          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-gradient-to-tr from-[#B51D19] to-[#080707] p-[1.5px] transition-transform duration-300 group-hover:scale-105 shrink-0">
-            <div className="w-full h-full bg-[#0B0B0B] rounded-[10px] flex items-center justify-center font-bold text-base sm:text-lg text-white">
-              H
+          <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-[#B51D19] p-[1.5px] transition-transform duration-300 group-hover:scale-105 shrink-0 overflow-hidden">
+            <div className="w-full h-full bg-[#0B0B0B] rounded-[10px] overflow-hidden flex items-center justify-center font-bold text-base sm:text-lg text-white">
+              {profile?.avatar_url ? (
+                <img
+                  src={profile.avatar_url}
+                  alt={profile.full_name_en || 'Habib AL-Rahman'}
+                  className="w-full h-full object-cover"
+                />
+              ) : (
+                <span>H</span>
+              )}
             </div>
           </div>
           <div className="flex flex-col">

@@ -1,34 +1,45 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
-import { Plus, Trash2, Edit2, Building2 } from 'lucide-react'
+import { Plus, Trash2, Edit2, Building2, AlertCircle } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
-import type { Client } from '@/types/database'
+import type { Client, SocialLink } from '@/types/database'
 import { Card } from '@/components/ui/Card'
 import { Button } from '@/components/ui/Button'
 import { Badge } from '@/components/ui/Badge'
 import { MediaUploader } from '@/components/media/MediaUploader'
 import { deleteStorageMedia } from '@/services/storageService'
 import { dataSync } from '@/services/dataSync'
+import { EntityLinksEditor, renderPlatformIcon } from '@/components/shared/EntityLinksEditor'
+import { getEntityLinks, saveEntityLinks, getAllClientLinks } from '@/services/linksService'
 
 export const ClientsManagerPage: React.FC = () => {
   const { i18n } = useTranslation()
   const isAr = i18n.language.startsWith('ar')
 
   const [clients, setClients] = useState<Client[]>([])
+  const [clientLinksMap, setClientLinksMap] = useState<Record<string, SocialLink[]>>({})
   const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [showModal, setShowModal] = useState(false)
   const [editingClient, setEditingClient] = useState<Partial<Client> | null>(null)
   const [originalLogoUrl, setOriginalLogoUrl] = useState<string | null>(null)
+  const [clientLinks, setClientLinks] = useState<Partial<SocialLink>[]>([])
 
   const fetchClients = async () => {
     try {
-      const { data, error } = await supabase
-        .from('clients')
-        .select('*')
-        .order('sort_order', { ascending: true })
-      if (!error && data) {
-        setClients(data)
+      const [clientsRes, linksRes] = await Promise.all([
+        supabase
+          .from('clients')
+          .select('*')
+          .order('sort_order', { ascending: true }),
+        getAllClientLinks(true),
+      ])
+
+      if (!clientsRes.error && clientsRes.data) {
+        setClients(clientsRes.data)
       }
+      setClientLinksMap(linksRes)
     } catch (err) {
       console.error(err)
     } finally {
@@ -40,10 +51,13 @@ export const ClientsManagerPage: React.FC = () => {
     fetchClients()
   }, [])
 
-  const openModal = (client?: Client) => {
+  const openModal = async (client?: Client) => {
+    setErrorMessage(null)
     if (client) {
       setEditingClient(client)
       setOriginalLogoUrl(client.logo_url || null)
+      const links = await getEntityLinks('client', client.id, true)
+      setClientLinks(links)
     } else {
       setEditingClient({
         name_ar: '',
@@ -57,6 +71,7 @@ export const ClientsManagerPage: React.FC = () => {
         sort_order: clients.length + 1,
       })
       setOriginalLogoUrl(null)
+      setClientLinks([])
     }
     setShowModal(true)
   }
@@ -65,7 +80,12 @@ export const ClientsManagerPage: React.FC = () => {
     e.preventDefault()
     if (!editingClient) return
 
+    setSaving(true)
+    setErrorMessage(null)
+
     try {
+      let clientId = editingClient.id
+
       if (editingClient.id) {
         const { error } = await supabase.from('clients').update(editingClient).eq('id', editingClient.id)
         if (error) throw error
@@ -77,18 +97,30 @@ export const ClientsManagerPage: React.FC = () => {
           )
         }
       } else {
-        const { error } = await supabase.from('clients').insert([editingClient])
+        const { data, error } = await supabase.from('clients').insert([editingClient]).select('id').single()
         if (error) throw error
+        clientId = data.id
+      }
+
+      // Save dynamic client social links
+      if (clientId) {
+        await saveEntityLinks('client', clientId, clientLinks)
       }
 
       // Immediate local sync
       dataSync.emit('clients.updated')
+      dataSync.emit('links.updated')
 
       setShowModal(false)
       setEditingClient(null)
+      setOriginalLogoUrl(null)
+      setClientLinks([])
       fetchClients()
-    } catch (err) {
+    } catch (err: unknown) {
       console.error('Error saving client:', err)
+      setErrorMessage(err instanceof Error ? err.message : 'Error saving client')
+    } finally {
+      setSaving(false)
     }
   }
 
@@ -102,6 +134,9 @@ export const ClientsManagerPage: React.FC = () => {
         const { error } = await supabase.from('clients').delete().eq('id', client.id)
         if (error) throw error
 
+        // Also cleanup associated social links
+        await supabase.from('social_links').delete().eq('owner_type', 'client').eq('owner_id', client.id)
+
         if (client.logo_url) {
           deleteStorageMedia(client.logo_url).catch((err) =>
             console.warn('Failed to cleanup client logo from storage:', err)
@@ -109,6 +144,7 @@ export const ClientsManagerPage: React.FC = () => {
         }
 
         dataSync.emit('clients.updated')
+        dataSync.emit('links.updated')
         fetchClients()
       } catch (err) {
         console.error('Error deleting client:', err)
@@ -186,6 +222,20 @@ export const ClientsManagerPage: React.FC = () => {
                     {isAr ? (client.work_description_ar || client.work_description_en) : (client.work_description_en || client.work_description_ar)}
                   </p>
                 )}
+
+                {clientLinksMap[client.id] && clientLinksMap[client.id].length > 0 && (
+                  <div className="flex items-center gap-1.5 mt-3 pt-2.5 border-t border-[#1C1C1C] flex-wrap">
+                    {clientLinksMap[client.id].map((l) => (
+                      <span
+                        key={l.id}
+                        title={(isAr ? l.label_ar : l.label_en) || l.platform}
+                        className="w-6 h-6 rounded-md bg-[#161616] border border-[#242424] flex items-center justify-center text-[#9B9B9B]"
+                      >
+                        {renderPlatformIcon(l.icon || l.platform || l.label_en)}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
 
               <div className="flex items-center justify-end gap-2 mt-5 pt-3 border-t border-[#1C1C1C]">
@@ -220,6 +270,13 @@ export const ClientsManagerPage: React.FC = () => {
             <h3 className="text-lg font-bold text-[#F5F5F5] mb-4">
               {editingClient.id ? (isAr ? 'تعديل عميل' : 'Edit Client') : (isAr ? 'إضافة عميل جديد' : 'New Client')}
             </h3>
+
+            {errorMessage && (
+              <div className="mb-4 p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 shrink-0" />
+                <span>{errorMessage}</span>
+              </div>
+            )}
 
             <form onSubmit={handleSave} className="space-y-4">
               {/* Client Logo Upload */}
@@ -310,6 +367,16 @@ export const ClientsManagerPage: React.FC = () => {
                 />
               </div>
 
+              {/* Dynamic Social Media Links for Client */}
+              <div className="pt-2 border-t border-[#1F1F1F]">
+                <EntityLinksEditor
+                  links={clientLinks}
+                  onChange={setClientLinks}
+                  isAr={isAr}
+                  title={isAr ? 'روابط التواصل الاجتماعي وموقع العميل' : 'Client Social Media & Web Links'}
+                />
+              </div>
+
               <div className="flex items-center gap-2 pt-2">
                 <input
                   type="checkbox"
@@ -327,7 +394,7 @@ export const ClientsManagerPage: React.FC = () => {
                 <Button type="button" variant="secondary" onClick={() => setShowModal(false)}>
                   {isAr ? 'إلغاء' : 'Cancel'}
                 </Button>
-                <Button type="submit" variant="primary">
+                <Button type="submit" variant="primary" isLoading={saving}>
                   {isAr ? 'حفظ' : 'Save'}
                 </Button>
               </div>

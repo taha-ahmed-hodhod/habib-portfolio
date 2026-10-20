@@ -18,9 +18,11 @@ import {
   Globe,
 } from 'lucide-react'
 import { supabase } from '@/lib/supabase'
+import { useProfile } from '@/hooks/useProfile'
 
 export const DashboardLayout: React.FC = () => {
   const { t, i18n } = useTranslation()
+  const { profile } = useProfile()
   const navigate = useNavigate()
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const isAr = i18n.language.startsWith('ar')
@@ -71,9 +73,17 @@ export const DashboardLayout: React.FC = () => {
         {/* Sidebar Header */}
         <div className="h-20 px-6 flex items-center justify-between border-b border-[#1A1A1A]">
           <Link to="/" className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#B51D19] to-[#080707] p-[1px]">
-              <div className="w-full h-full bg-[#0E0E0E] rounded-[11px] flex items-center justify-center font-bold text-white text-sm">
-                H
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-[#B51D19] to-[#080707] p-[1px] overflow-hidden">
+              <div className="w-full h-full bg-[#0E0E0E] rounded-[11px] overflow-hidden flex items-center justify-center font-bold text-white text-sm">
+                {profile?.avatar_url ? (
+                  <img
+                    src={profile.avatar_url}
+                    alt={profile.full_name_en || 'Habib Portfolio'}
+                    className="w-full h-full object-cover"
+                  />
+                ) : (
+                  <span>H</span>
+                )}
               </div>
             </div>
             <div>

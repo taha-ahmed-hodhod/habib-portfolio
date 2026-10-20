@@ -1,11 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { ArrowUpRight } from 'lucide-react'
-import { supabase } from '@/lib/supabase'
 import type { Profile } from '@/types/database'
 import { Button } from '@/components/ui/Button'
-import { dataSync } from '@/services/dataSync'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
+import { useProfile } from '@/hooks/useProfile'
 import { renderPlatformIcon } from '@/components/shared/EntityLinksEditor'
 import { Skeleton } from '@/components/ui/Skeleton'
 
@@ -13,8 +12,9 @@ export const HeroSection: React.FC = () => {
   const { t, i18n } = useTranslation()
   const isAr = i18n.language.startsWith('ar')
   const { heroLinks, loading: linksLoading } = useSocialLinks()
+  const { profile: liveProfile, loading } = useProfile()
 
-  const [profile, setProfile] = useState<Profile>({
+  const profile: Profile = liveProfile || {
     id: 'default',
     full_name_ar: 'Habib AL-Rahman',
     full_name_en: 'Habib AL-Rahman',
@@ -29,37 +29,12 @@ export const HeroSection: React.FC = () => {
     projects_count: 100,
     experience_years: 5,
     primary_website_url: null,
-  })
-
-  const [loading, setLoading] = useState(true)
+  }
 
   // Live count-up animation state
   const [displayProjects, setDisplayProjects] = useState(0)
   const [displayClients, setDisplayClients] = useState(0)
   const [displayYears, setDisplayYears] = useState(0)
-
-  const loadProfile = async () => {
-    try {
-      const { data } = await supabase.from('profiles').select('*').limit(1).single()
-      if (data) {
-        setProfile(data)
-      }
-    } catch (e) {
-      console.error('Profile fetch error:', e)
-    } finally {
-      setLoading(false)
-    }
-  }
-
-  useEffect(() => {
-    loadProfile()
-
-    const unsubProfile = dataSync.on('profile.updated', () => loadProfile())
-
-    return () => {
-      unsubProfile()
-    }
-  }, [])
 
   // Count up timer
   useEffect(() => {

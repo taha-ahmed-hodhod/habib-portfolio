@@ -1,37 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import { supabase } from '@/lib/supabase'
+import { useProfile } from '@/hooks/useProfile'
 
 export interface GlobalInitialLoaderProps {
   onComplete?: () => void
 }
 
 export const GlobalInitialLoader: React.FC<GlobalInitialLoaderProps> = ({ onComplete }) => {
-  const [profileName, setProfileName] = useState('Habib Al-Rahman')
+  const { profile } = useProfile()
+  const profileName = profile?.full_name_en || 'Habib Al-Rahman'
   const [displayedText, setDisplayedText] = useState('')
   const [progress, setProgress] = useState(0)
   const [isExiting, setIsExiting] = useState(false)
   const [isDone, setIsDone] = useState(false)
 
-  // 1. Fetch dynamic profile name if available, without delaying initial animation
-  useEffect(() => {
-    const fetchName = async () => {
-      try {
-        const { data } = await supabase
-          .from('profiles')
-          .select('full_name_en, full_name_ar')
-          .limit(1)
-          .single()
-        if (data?.full_name_en) {
-          setProfileName(data.full_name_en)
-        }
-      } catch {
-        // Fallback to default
-      }
-    }
-    fetchName()
-  }, [])
-
-  // 2. Letter-by-letter typing animation for the name
+  // 1. Letter-by-letter typing animation for the name
   useEffect(() => {
     let currentIndex = 0
     const targetText = profileName
@@ -48,7 +30,7 @@ export const GlobalInitialLoader: React.FC<GlobalInitialLoaderProps> = ({ onComp
     return () => clearInterval(interval)
   }, [profileName])
 
-  // 3. Smooth Progress Bar (Connected to initialization)
+  // 2. Smooth Progress Bar (Connected to initialization)
   useEffect(() => {
     const startTime = Date.now()
     const targetDuration = 1400 // Smooth ~1.4s total initialization window
@@ -92,10 +74,18 @@ export const GlobalInitialLoader: React.FC<GlobalInitialLoaderProps> = ({ onComp
         {/* Animated Brand Emblem */}
         <div className="relative mb-6">
           <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-[#B51D19] to-[#080707] opacity-75 blur-sm animate-pulse" />
-          <div className="relative w-16 h-16 rounded-2xl bg-[#0B0B0B] border border-[#242424] flex items-center justify-center shadow-2xl">
-            <span className="text-xl font-black gradient-name">
-              HR
-            </span>
+          <div className="relative w-16 h-16 rounded-2xl bg-[#0B0B0B] border border-[#242424] overflow-hidden flex items-center justify-center shadow-2xl">
+            {profile?.avatar_url ? (
+              <img
+                src={profile.avatar_url}
+                alt={profile.full_name_en || 'Habib AL-Rahman'}
+                className="w-full h-full object-cover"
+              />
+            ) : (
+              <span className="text-xl font-black gradient-name">
+                HR
+              </span>
+            )}
           </div>
         </div>
 

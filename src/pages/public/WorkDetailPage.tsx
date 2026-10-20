@@ -100,13 +100,19 @@ export const WorkDetailPage: React.FC = () => {
             />
           ) : (
             <video
-              src={parsed.cleanUrl}
+              src={parsed.cleanUrl.includes('#') ? parsed.cleanUrl : `${parsed.cleanUrl}#t=0.001`}
               poster={work.thumbnail_url || undefined}
               controls={settings.controls ?? true}
               autoPlay={settings.autoplay ?? false}
               muted={settings.mute || settings.autoplay}
               loop={settings.loop ?? false}
               playsInline
+              onLoadedData={(e) => {
+                const v = e.currentTarget
+                if (!work.thumbnail_url && v.currentTime === 0) {
+                  v.currentTime = 0.001
+                }
+              }}
               className="w-full h-full object-contain"
             />
           )

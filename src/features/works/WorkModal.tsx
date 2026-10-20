@@ -286,12 +286,18 @@ export const WorkModal: React.FC<WorkModalProps> = ({ work, onClose, isAr }) => 
 
               <video
                 ref={videoRef}
-                src={parsed.cleanUrl}
+                src={parsed.cleanUrl.includes('#') ? parsed.cleanUrl : `${parsed.cleanUrl}#t=0.001`}
                 poster={work.thumbnail_url || undefined}
                 playsInline
                 loop={settings.loop}
                 muted={settings.mute || settings.autoplay || isMuted}
                 preload="auto"
+                onLoadedData={(e) => {
+                  const v = e.currentTarget
+                  if (!work.thumbnail_url && v.currentTime === 0) {
+                    v.currentTime = 0.001
+                  }
+                }}
                 onTimeUpdate={handleTimeUpdate}
                 onLoadedMetadata={handleLoadedMetadata}
                 onEnded={() => setIsPlaying(false)}

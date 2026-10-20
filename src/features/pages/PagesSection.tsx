@@ -96,7 +96,7 @@ export const PagesSection: React.FC = () => {
                     className="relative rounded-3xl p-6 sm:p-8 bg-gradient-to-b from-[#101010] to-[#0A0A0A] border border-[#242424] hover:border-[#B51D19]/50 shadow-2xl transition-all duration-300 flex flex-col items-center text-center group"
                   >
                     {/* Brand Avatar */}
-                    <div className="w-28 h-28 rounded-3xl overflow-hidden mb-6 p-[2px] bg-gradient-to-br from-[#B51D19] to-[#080707] shadow-xl">
+                    <div className="w-28 h-28 rounded-3xl overflow-hidden mb-6 p-[2px] bg-[#E63B32] shadow-xl">
                       <div className="w-full h-full bg-[#121212] rounded-[22px] flex items-center justify-center overflow-hidden">
                         {p.image_url ? (
                           <img src={p.image_url} alt={p.name_ar} loading="lazy" className="w-full h-full object-cover" />

@@ -1,6 +1,5 @@
 import React from 'react'
 import { useTranslation } from 'react-i18next'
-import { Phone, Mail } from 'lucide-react'
 import { useSocialLinks } from '@/hooks/useSocialLinks'
 import { renderPlatformIcon } from '@/components/shared/EntityLinksEditor'
 
@@ -25,7 +24,7 @@ export const Footer: React.FC = () => {
             </p>
           </div>
 
-          {/* Social Icons & Contact Info */}
+          {/* Social Icons */}
           <div className="flex flex-col items-center md:items-end gap-3">
             {/* Dynamic Social Icons */}
             {linksLoading ? (
@@ -54,26 +53,6 @@ export const Footer: React.FC = () => {
                 ))}
               </div>
             ) : null}
-
-            {/* Direct Contact Links */}
-            <div className="flex flex-col items-center md:items-end gap-2 pt-1 text-xs">
-              <a
-                href="tel:+201007430812"
-                dir="ltr"
-                className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#0F0F0F]/80 border border-[#242424]/80 text-[#B3B3B3] hover:text-white hover:border-[#B51D19]/40 hover:bg-[#B51D19]/10 transition-all duration-300 group"
-              >
-                <Phone className="w-3.5 h-3.5 text-[#E63B32] group-hover:scale-110 transition-transform shrink-0" />
-                <span className="font-medium tracking-wide" dir="ltr">+20 10 07430812</span>
-              </a>
-
-              <a
-                href="mailto:hb202065@gmail.com"
-                className="inline-flex items-center gap-2 px-2.5 py-1 rounded-lg bg-[#0F0F0F]/80 border border-[#242424]/80 text-[#B3B3B3] hover:text-white hover:border-[#B51D19]/40 hover:bg-[#B51D19]/10 transition-all duration-300 group"
-              >
-                <Mail className="w-3.5 h-3.5 text-[#E63B32] group-hover:scale-110 transition-transform shrink-0" />
-                <span className="font-medium">hb202065@gmail.com</span>
-              </a>
-            </div>
           </div>
         </div>
 

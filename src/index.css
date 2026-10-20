@@ -58,6 +58,14 @@
   }
 }
 
+/* Hide native video controls completely on cards */
+video::-webkit-media-controls,
+video::-webkit-media-controls-enclosure,
+video::-webkit-media-controls-panel {
+  display: none !important;
+  -webkit-appearance: none;
+}
+
 /* Hide scrollbar utility */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
@@ -82,11 +90,11 @@
 .gradient-name {
   display: inline-block;
   background: linear-gradient(90deg,
-      #660C03 0%,
+      #cc1707 0%,
       #98422B 25%,
       #DB5B4C 48%,
-      #DF9A59 72%,
-      #660C03 100%);
+      #e28f42 72%,
+      #cc1707 100%);
   background-size: 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
@@ -99,11 +107,11 @@
 /* ── Hero Profile Image: Animated Red-to-Black Border & Glow (Right to Left) ── */
 .hero-border-animated {
   background: linear-gradient(90deg,
-      #660C03 0%,
-      #98422B 25%,
+      #cc1707 0%,
+      #b34222 25%,
       #DB5B4C 48%,
-      #DF9A59 72%,
-      #660C03 100%);
+      #e28f42 72%,
+      #cc1707 100%);
   background-size: 200% 100%;
   will-change: background-position;
   animation: gradient-r2l 3s linear infinite !important;
@@ -111,11 +119,12 @@
 
 .hero-glow-animated {
   background: linear-gradient(90deg,
-      #660C03 0%,
-      #98422B 25%,
+      #cc1707 0%,
+      #b34222 25%,
       #DB5B4C 48%,
-      #DF9A59 72%,
-      #660C03 100%);
+      
+      #e28f42 72%,
+      #cc1707 100%);
   background-size: 200% 100%;
   will-change: background-position;
   animation: gradient-r2l 3s linear infinite !important;
